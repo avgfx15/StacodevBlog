@@ -19,7 +19,7 @@ export const signUpController = async (req, res, next) => {
       mobile === '' ||
       password === ''
     ) {
-      next(errorHandler(400, 'All Fields are required'));
+      return next(errorHandler(400, 'All Fields are required'));
     }
 
     // $ Hash Password
