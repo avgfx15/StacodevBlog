@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 // Declare the Schema of the Mongo model
 const userSchema = new mongoose.Schema(
   {
-    name: {
+    username: {
       type: String,
       required: true,
       index: true,
