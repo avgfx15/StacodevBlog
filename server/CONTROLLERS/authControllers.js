@@ -1,8 +1,9 @@
 import bcryptjs from 'bcryptjs';
 
 import UserSchema from '../MODELS/userSchema.js';
+import { errorHandler } from '../MIDDLEWARE/errorMiddleware.js';
 
-export const signUpController = async (req, res) => {
+export const signUpController = async (req, res, next) => {
   try {
     // $ Descructure req.body
     const { username, email, mobile, password } = req.body;
@@ -18,7 +19,7 @@ export const signUpController = async (req, res) => {
       mobile === '' ||
       password === ''
     ) {
-      return res.status(400).json({ message: 'All fields are required' });
+      next(errorHandler(400, 'All Fields are required'));
     }
 
     // $ Hash Password
@@ -37,6 +38,6 @@ export const signUpController = async (req, res) => {
 
     return res.status(201).json({ message: 'New User Created', newUser });
   } catch (error) {
-    return res.status(500).json({ message: error.message });
+    next(error);
   }
 };
