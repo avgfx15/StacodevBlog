@@ -67,12 +67,8 @@ export const signInController = async (req, res, next) => {
     if (!checkPasswordValid) {
       return next(errorHandler(404, 'Invalid Credentials'));
     }
-    const loggedInUser = {
-      id: userExist.id,
-      username: userExist.username,
-      mobile: userExist.mobile,
-      email: userExist.email,
-    };
+
+    const { password: userPassword, ...rest } = userExist._doc;
 
     // * Create Token
     const token = jwt.sign({ id: userExist.id }, process.env.JWT_SECRET, {
@@ -82,7 +78,7 @@ export const signInController = async (req, res, next) => {
     return res
       .status(200)
       .cookie('access_token', token, { httpOnly: true })
-      .json(loggedInUser);
+      .json(rest);
 
     // % Create Token
   } catch (error) {
