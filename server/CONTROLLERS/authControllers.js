@@ -38,6 +38,6 @@ export const signUpController = async (req, res, next) => {
 
     return res.status(201).json({ message: 'New User Created', newUser });
   } catch (error) {
-    next(error);
+    return next(error);
   }
 };
