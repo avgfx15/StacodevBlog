@@ -16,11 +16,16 @@ const userSchema = new mongoose.Schema(
     mobile: {
       type: String,
       required: true,
-      unique: true,
+      default: '9858965896',
     },
     password: {
       type: String,
       required: true,
+    },
+    profilePic: {
+      type: String,
+      default:
+        'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png',
     },
   },
   { timestamps: true }

@@ -7,6 +7,7 @@ const authRouter = express.Router();
 import {
   signUpController,
   signInController,
+  googleSignInController,
 } from '../CONTROLLERS/authControllers.js';
 
 // & Routes
@@ -15,5 +16,8 @@ authRouter.post('/signup', signUpController);
 
 // / Signin Route
 authRouter.post('/signin', signInController);
+
+// / Signin Route With Google
+authRouter.post('/google', googleSignInController);
 
 export default authRouter;

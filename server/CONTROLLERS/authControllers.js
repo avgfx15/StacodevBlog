@@ -85,3 +85,58 @@ export const signInController = async (req, res, next) => {
     return next(error);
   }
 };
+
+export const googleSignInController = async (req, res, next) => {
+  const { username, email, profilePic, mobile } = req.body;
+  console.log(req.body);
+
+  try {
+    // % Check if user exist
+    const userExist = await UserSchema.findOne({ email });
+    if (userExist) {
+      // % User exist then create token and singin
+      const { password: userPassword, ...rest } = userExist._doc;
+
+      // * Create Token
+      const token = jwt.sign({ id: userExist.id }, process.env.JWT_SECRET, {
+        expiresIn: '1h',
+      });
+
+      return res
+        .status(200)
+        .cookie('access_token', token, { httpOnly: true })
+        .json(rest);
+    } else {
+      // % User Not Exist then create NewUser
+      // & Create Password for googleUser
+      const generatePassword =
+        Math.random().toString(36).slice(-8) +
+        Math.random().toString(36).slice(-8);
+      // & Hash Password
+      const hashPassword = bcryptjs.hashSync(generatePassword, 10);
+      // & Create New User Data
+      const googleUser = new UserSchema({
+        username: username,
+        email: email,
+        mobile: mobile,
+        profilePic: profilePic,
+        password: hashPassword,
+      });
+      // & Save to Database
+      await googleUser.save();
+
+      // * Send User Data to client with out password
+      const { password: userPassword, ...rest } = googleUser._doc;
+
+      // * Create Token
+      const token = jwt.sign({ id: googleUser.id }, process.env.JWT_SECRET, {
+        expiresIn: '1h',
+      });
+
+      return res
+        .status(200)
+        .cookie('access_token', token, { httpOnly: true })
+        .json(rest);
+    }
+  } catch (error) {}
+};
