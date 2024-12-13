@@ -4,14 +4,20 @@ import { Link, useLocation } from 'react-router-dom';
 
 import { AiOutlineSearch } from 'react-icons/ai';
 
-import { FaMoon } from 'react-icons/fa';
+import { FaMoon, FaSun } from 'react-icons/fa';
 
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+
+import { toggleTheme } from '../redux/Theme/ThemeSlice';
 
 // # Main Home Component
 const Header = () => {
   const path = useLocation().pathname;
+
+  const dispatch = useDispatch();
   const { currentUser } = useSelector((state) => state.userReducer);
+
+  const { theme } = useSelector((state) => state.themeReducer);
 
   // # Render Function
   return (
@@ -37,8 +43,13 @@ const Header = () => {
         <AiOutlineSearch />
       </Button>
       <div className='flex gap-2 md:order-2'>
-        <Button className='w-12 h-10 lg:hidden' color='grey' pill>
-          <FaMoon />
+        <Button
+          className='w-12 h-10 hidden sm:inline'
+          color='black'
+          pill
+          onClick={() => dispatch(toggleTheme())}
+        >
+          {theme === 'light' ? <FaSun /> : <FaMoon />}
         </Button>
 
         {currentUser ? (
