@@ -88,16 +88,15 @@ export const signInController = async (req, res, next) => {
 
 export const googleSignInController = async (req, res, next) => {
   const { username, email, profilePic, mobile } = req.body;
-  console.log(req.body);
 
   try {
     // % Check if user exist
     const userExist = await UserSchema.findOne({ email });
     if (userExist) {
-      // % User exist then create token and singin
-      const { password: userPassword, ...rest } = userExist._doc;
+      // * Send User Data to client with out password
+      const { password, ...rest } = userExist._doc;
 
-      // * Create Token
+      // % User exist then create token and singin
       const token = jwt.sign({ id: userExist.id }, process.env.JWT_SECRET, {
         expiresIn: '1h',
       });
@@ -126,7 +125,7 @@ export const googleSignInController = async (req, res, next) => {
       await googleUser.save();
 
       // * Send User Data to client with out password
-      const { password: userPassword, ...rest } = googleUser._doc;
+      const { password, ...rest } = googleUser._doc;
 
       // * Create Token
       const token = jwt.sign({ id: googleUser.id }, process.env.JWT_SECRET, {

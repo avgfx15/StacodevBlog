@@ -16,7 +16,7 @@ const userSchema = new mongoose.Schema(
     mobile: {
       type: String,
       required: true,
-      default: '9858965896',
+      default: '9999999999', // / If Google account without mobile no then dummy No
     },
     password: {
       type: String,
