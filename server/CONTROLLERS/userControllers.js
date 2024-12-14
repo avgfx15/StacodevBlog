@@ -1,12 +1,17 @@
 import bcryptjs from 'bcryptjs';
 
+// ~ Error Handler
 import { errorHandler } from '../MIDDLEWARE/errorMiddleware.js';
+
+// ~ Import userSchema
 import UserSchema from '../MODELS/userSchema.js';
 
+// & User Test Route
 export const testController = async (req, res) => {
   res.json('User Route');
 };
 
+// * Update User
 export const updateUserController = async (req, res, next) => {
   // & Get user id from params (url)
   const id = req.params.userId;
@@ -22,50 +27,59 @@ export const updateUserController = async (req, res, next) => {
   }
 
   // & Check if newPassword added
-  if (req.body.newPassword) {
+  if (req.body.password) {
     if (req.body.password < 6) {
       return next(errorHandler(400, 'Password must be 6 characters long'));
     }
     // & Hash password
-    req.body.password = await bcryptjs.hash(req.body.newPassword, 10);
+
+    req.body.password = await bcryptjs.hash(req.body.password, 10);
   }
 
   // & Check if username change
   if (req.body.username) {
     // & Check if username already exists
     const user = await UserSchema.findOne({ username: req.body.username });
-    console.log('User Not Matched');
-
+    // % If user matched by username then return  userExist
     if (user) {
       return next(errorHandler(400, 'Username already exists'));
     }
-    if (req.body.username.length < 10 || req.body.username.length > 30) {
+    // ! Change in username cannot contain space
+    if (req.body.username.includes(' ')) {
+      return next(errorHandler(400, 'Username cannot contain space'));
+    }
+    // ! Change in username
+    if (req.body.username.match(/^[a-zA-Z0-9]+$/)) {
       return next(
-        errorHandler(400, 'Username must between 10 to 30 characters long')
+        errorHandler(400, 'Username contain only letters and numbers')
+      );
+    }
+    // ! Change in username condition by length
+    if (req.body.username.length < 6 || req.body.username.length > 15) {
+      return next(
+        errorHandler(400, 'Username must between 6 to 15 characters long')
       );
     }
   }
 
   try {
-    console.log('try catch');
-
     // & Update user with new password
     const updatedUser = await UserSchema.findByIdAndUpdate(
       id,
       {
         $set: {
           username: req.body.username,
+          name: req.body.name,
           email: req.body.email,
           password: req.body.password,
           profilePic: req.body.profilePic,
+          mobile: req.body.mobile,
         },
       },
       { new: true }
     );
-    console.log(updatedUser);
 
     const { password, ...rest } = updatedUser._doc;
-    console.log(rest);
 
     // & Return updated user
     return res.status(200).json(rest);

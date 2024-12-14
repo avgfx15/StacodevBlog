@@ -56,7 +56,18 @@ const Header = () => {
           <Dropdown
             arrowIcon={false}
             inline
-            label={<Avatar alt='User' img={currentUser.profilePic} rounded />}
+            label={
+              <Avatar
+                alt='User'
+                img={
+                  currentUser.profilePic.startsWith('http://') ||
+                  currentUser.profilePic.startsWith('https://')
+                    ? currentUser.profilePic
+                    : `./uploads/` + currentUser.profilePic
+                }
+                rounded
+              />
+            }
           >
             <Dropdown.Header>
               <span className='block test-sm'>@{currentUser.username}</span>
