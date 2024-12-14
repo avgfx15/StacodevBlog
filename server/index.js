@@ -1,6 +1,13 @@
 // ~ Import Modules
 import express from 'express';
+
+// ~ Cookie - parser
+import cookieParser from 'cookie-parser';
+
+import multer from 'multer';
 const app = express();
+
+import cors from 'cors';
 
 // ~ Import Dotenv
 import dotenv from 'dotenv';
@@ -24,6 +31,35 @@ app.get('/', (req, res) => res.send('Hello World!'));
 
 // & Middleware
 app.use(express.json());
+
+// & Cors middleware
+app.use(cors());
+
+// & CookieParser Middleware
+app.use(cookieParser());
+
+// & Set up multer for file uploads
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, '../client/public/uploads');
+  },
+  filename: (req, file, cb) => {
+    const uniqueFileName = new Date().getTime() + file.originalname;
+    cb(null, uniqueFileName); // Append extension
+    console.log(uniqueFileName);
+  },
+});
+
+const upload = multer({ storage });
+
+// + Create an endpoint to upload profile picture
+app.post('/upload', upload.single('file'), async (req, res) => {
+  console.log('upload function call');
+
+  const file = req.file; // Save the path to the file
+
+  res.json(file.filename);
+});
 
 // & All Routes
 app.use('/api/user', userRouter);

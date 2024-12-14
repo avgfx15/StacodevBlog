@@ -1,17 +1,78 @@
 import { Button, TextInput } from 'flowbite-react';
+import { useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 
+// # Main DashProfile Component
 const DashProfile = () => {
+  // & Get Value For CurrentUser
   const { currentUser } = useSelector((state) => state.userReducer);
-  console.log(currentUser);
 
+  const [imageFile, setImageFile] = useState(null);
+
+  const [imageFileUrl, setImageFileUrl] = useState(null);
+
+  // const [message, setMessage] = useState('');
+  console.log(imageFile);
+  console.log(imageFileUrl);
+
+  const filePickerRef = useRef();
+
+  const handleProfilePicChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      console.log(file);
+
+      setImageFile(e.target.files[0]);
+    }
+  };
+
+  useEffect(() => {
+    if (imageFile) {
+      uploadImage();
+    }
+  }, [imageFile]);
+
+  const uploadImage = async () => {
+    // e.preventDefault();
+    try {
+      const formData = new FormData();
+      formData.append('file', imageFile);
+      const response = await fetch('http://localhost:3200/upload', {
+        method: 'POST',
+        body: formData,
+      });
+      const data = await response.json();
+      console.log(data);
+      setImageFileUrl(data);
+
+      return data;
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
+  // # Rander Function
   return (
     <div className='max-w-lg mx-auto p-3 w-full'>
       <h1 className='my-7 text-center text-3xl font-semibold'>Profile</h1>
       <form className='flex flex-col gap-4'>
-        <div className='w-32 h-32 self-center cursor-pointer shadow-md overflow-hidden rounded-full'>
+        <input
+          type='file'
+          accept='image/*'
+          onChange={handleProfilePicChange}
+          ref={filePickerRef}
+          hidden
+        />
+        <div
+          className='w-32 h-32 self-center cursor-pointer shadow-md overflow-hidden rounded-full'
+          onClick={() => filePickerRef.current.click()}
+        >
           <img
-            src={currentUser.profilePic}
+            src={
+              imageFileUrl
+                ? `./uploads/` + imageFileUrl
+                : currentUser.profilePic
+            }
             alt='profilePic'
             className='rounded-full w-full h-full object-cover border-8 border-[lightgray]'
           />

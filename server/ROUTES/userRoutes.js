@@ -1,8 +1,17 @@
 import express from 'express';
-import { testController } from '../CONTROLLERS/userControllers.js';
-
 const userRouter = express.Router();
+import {
+  testController,
+  updateUserController,
+} from '../CONTROLLERS/userControllers.js';
+import { verifyAuthUserMiddleware } from '../MIDDLEWARE/verifyAuthUser.js';
 
 userRouter.get('/test', testController);
+
+userRouter.put(
+  '/update/:userId',
+  verifyAuthUserMiddleware,
+  updateUserController
+);
 
 export default userRouter;
