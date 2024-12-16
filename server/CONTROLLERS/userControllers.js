@@ -35,7 +35,6 @@ export const updateUserController = async (req, res, next) => {
 
     req.body.password = await bcryptjs.hash(req.body.password, 10);
   }
-
   // & Check if username change
   if (req.body.username) {
     // & Check if username already exists
@@ -49,11 +48,12 @@ export const updateUserController = async (req, res, next) => {
       return next(errorHandler(400, 'Username cannot contain space'));
     }
     // ! Change in username
-    if (req.body.username.match(/^[a-zA-Z0-9]+$/)) {
+    if (!req.body.username.match(/^[a-zA-Z0-9]+$/)) {
       return next(
         errorHandler(400, 'Username contain only letters and numbers')
       );
     }
+
     // ! Change in username condition by length
     if (req.body.username.length < 6 || req.body.username.length > 15) {
       return next(
@@ -85,5 +85,28 @@ export const updateUserController = async (req, res, next) => {
     return res.status(200).json(rest);
   } catch (error) {
     return next(errorHandler(500, 'Failed to update user'));
+  }
+};
+
+// -Delete User By Id
+export const deleteUserByIdController = async (req, res, next) => {
+  try {
+    // & Get Id By loggedIn User Token
+    const loggedInUserId = req.user.id;
+
+    // & Get Id from params
+    const id = req.params.userId;
+
+    if (id !== loggedInUserId) {
+      return next(errorHandler(400, 'You are not authorized to delete user.'));
+    }
+
+    // - Delete From Db
+    await UserSchema.findByIdAndDelete(id);
+    console.log('User Deleted');
+
+    return res.status(200).json('User Deleted Successfully.');
+  } catch (error) {
+    return next(errorHandler(500, 'Failed to delete Your Account'));
   }
 };

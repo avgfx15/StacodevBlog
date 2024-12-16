@@ -13,8 +13,6 @@ const DashProfile = () => {
   // & Get Value For CurrentUser
   const { currentUser } = useSelector((state) => state.userReducer);
 
-  console.log(currentUser);
-
   const [imageFile, setImageFile] = useState(null);
 
   const [imageFileUrl, setImageFileUrl] = useState(null);
@@ -107,6 +105,7 @@ const DashProfile = () => {
           ref={filePickerRef}
           hidden
         />
+
         <div
           className='w-32 h-32 self-center cursor-pointer shadow-md overflow-hidden rounded-full'
           onClick={() => filePickerRef.current.click()}
@@ -123,7 +122,13 @@ const DashProfile = () => {
             />
           ) : (
             <img
-              src={currentUser.profilePic}
+              src={
+                typeof currentUser.profilePic === 'string' &&
+                (currentUser?.profilePic.startsWith('http://') ||
+                  currentUser?.profilePic.startsWith('https://'))
+                  ? currentUser?.profilePic
+                  : `./uploads/` + currentUser.profilePic
+              }
               alt='profilePic'
               className='rounded-full w-full h-full object-cover border-8 border-[lightgray]'
             />
