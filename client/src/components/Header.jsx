@@ -18,7 +18,6 @@ const Header = () => {
   const dispatch = useDispatch();
 
   const currentUser = useSelector(currentUserState);
-  console.log(currentUser.profilePic);
 
   const { theme } = useSelector((state) => state.themeReducer);
 

@@ -103,7 +103,7 @@ export const uploadProfilePicAction = createAsyncThunk(
       const data = await response.json();
       // % Handle Error
       if (data.success === false) {
-        return;
+        return data.message;
       }
       if (response.ok) {
         return data;
@@ -121,6 +121,9 @@ export const updateUserAction = createAsyncThunk(
     console.log(inputData, currentUser);
 
     try {
+      if (Object.keys(inputData).length === 0) {
+        return;
+      }
       const response = await fetch(`/api/user/update/${currentUser._id}`, {
         method: 'PUT',
         headers: {
@@ -130,7 +133,29 @@ export const updateUserAction = createAsyncThunk(
       });
 
       const data = await response.json();
-      console.log(data);
+
+      if (!response.ok) {
+        return data.message;
+      } else {
+        return data;
+      }
+    } catch (error) {
+      return error.message;
+    }
+  }
+);
+
+// - Delete User
+export const deleteUserAction = createAsyncThunk(
+  'deleteUser',
+  async (currentUser) => {
+    console.log(currentUser._id);
+
+    try {
+      const response = await fetch(`/api/user/delete/${currentUser._id}`, {
+        method: 'DELETE',
+      });
+      const data = response.json();
 
       if (!response.ok) {
         return data.message;

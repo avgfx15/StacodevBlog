@@ -103,7 +103,6 @@ export const deleteUserByIdController = async (req, res, next) => {
 
     // - Delete From Db
     await UserSchema.findByIdAndDelete(id);
-    console.log('User Deleted');
 
     return res.status(200).json('User Deleted Successfully.');
   } catch (error) {

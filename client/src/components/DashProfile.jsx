@@ -1,29 +1,53 @@
 import { Alert, Button, TextInput } from 'flowbite-react';
 import { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { currentUserState, imageFileState } from '../redux/User/UserSlice';
+
+// ~ import all state from userSlice
+import {
+  clearMessageAction,
+  currentUserState,
+  errorMsgState,
+  errorState,
+  imageFileState,
+  successMsgState,
+} from '../redux/User/UserSlice';
+
+// ~ Import user Actions from action
 import {
   updateUserAction,
   uploadProfilePicAction,
 } from '../redux/User/UserActions';
 
+// ~ Import Components
+import ModalComponent from './ModalComponent';
+
 // # Main DashProfile Component
 const DashProfile = () => {
+  // & dispatch hook
   const dispatch = useDispatch();
   // & Get Value For CurrentUser
 
+  // & Declare local state for Component
+  // & imageFile State
   const [imageFile, setImageFile] = useState(null);
 
+  // & Declare input state
   const [inputData, setInputData] = useState({});
 
-  const [updateMessage, setUpdateMessage] = useState(null);
-  const [updateError, setUpdateError] = useState(null);
+  // & Declare showModalForm state
+  const [showModalForm, setShowModalForm] = useState(false);
 
+  // & Declare profilePic input ref
   const filePickerRef = useRef();
 
+  // / Get all current State for User
   const currentUser = useSelector(currentUserState);
   const imageFileUrl = useSelector(imageFileState);
+  const error = useSelector(errorState);
+  const successMsg = useSelector(successMsgState);
+  const errorMsg = useSelector(errorMsgState);
 
+  // $ Handle change profilePic
   const handleProfilePicChange = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -31,33 +55,39 @@ const DashProfile = () => {
     }
   };
 
+  // $ HandleChange all input field
   const handleChange = async (e) => {
     setInputData({ ...inputData, [e.target.id]: e.target.value });
   };
 
+  // $ If new Image File then render
   useEffect(() => {
     if (imageFile) {
       uploadImage();
     }
   }, [imageFile]);
 
+  // % Upload Image Func
   const uploadImage = async () => {
     const formData = new FormData();
     formData.append('file', imageFile);
     dispatch(uploadProfilePicAction(formData));
   };
 
+  // +
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (Object.keys(inputData).length === 0) {
-      setUpdateError('No change done');
-      return;
-    }
-
     dispatch(updateUserAction({ inputData, currentUser }));
-    setUpdateMessage('Profile updated successfully');
   };
+
+  useEffect(() => {
+    if (successMsg || errorMsg) {
+      setTimeout(() => {
+        dispatch(clearMessageAction());
+      }, 3000);
+    }
+  }, [dispatch, errorMsg, successMsg]);
 
   // # Rander Function
   return (
@@ -144,19 +174,30 @@ const DashProfile = () => {
         </Button>
       </form>
       <div className='text-red-700 mt-5 flex justify-between'>
-        <span className='cursor-pointer'>Delete Account</span>
+        <span
+          className='cursor-pointer'
+          onClick={() => setShowModalForm(!showModalForm)}
+        >
+          Delete Account
+        </span>
         <span className='cursor-pointer'>Sign Out</span>
       </div>
-      {updateMessage && (
+      {successMsg && (
         <Alert className='mt-5' color='success'>
-          {updateMessage}
+          {successMsg}
         </Alert>
       )}
-      {updateError && (
-        <Alert className='mt-5' color='failure'>
-          {updateError}
-        </Alert>
-      )}
+      {error ||
+        (errorMsg && (
+          <Alert className='mt-5' color='failure'>
+            {error || errorMsg}
+          </Alert>
+        ))}
+
+      <ModalComponent
+        showModalForm={showModalForm}
+        setShowModalForm={setShowModalForm}
+      />
     </div>
   );
 };
