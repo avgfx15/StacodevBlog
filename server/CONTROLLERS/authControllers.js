@@ -57,30 +57,28 @@ export const signInController = async (req, res, next) => {
     const userExist = await UserSchema.findOne({ email });
     if (!userExist) {
       return next(errorHandler(404, 'User Not Exist'));
+    } else {
+      // % compare Hash Password
+      const checkPasswordValid = bcryptjs.compareSync(
+        password,
+        userExist.password
+      );
+      if (!checkPasswordValid) {
+        return next(errorHandler(404, 'Invalid Credentials'));
+      }
+
+      const { password: userPassword, ...rest } = userExist._doc;
+
+      // * Create Token
+      const token = jwt.sign({ id: userExist.id }, process.env.JWT_SECRET, {
+        expiresIn: '1h',
+      });
+
+      return res
+        .status(200)
+        .cookie('access_token', token, { httpOnly: true })
+        .json(rest);
     }
-
-    // % compare Hash Password
-    const checkPasswordValid = bcryptjs.compareSync(
-      password,
-      userExist.password
-    );
-    if (!checkPasswordValid) {
-      return next(errorHandler(404, 'Invalid Credentials'));
-    }
-
-    const { password: userPassword, ...rest } = userExist._doc;
-
-    // * Create Token
-    const token = jwt.sign({ id: userExist.id }, process.env.JWT_SECRET, {
-      expiresIn: '1h',
-    });
-
-    return res
-      .status(200)
-      .cookie('access_token', token, { httpOnly: true })
-      .json(rest);
-
-    // % Create Token
   } catch (error) {
     return next(error);
   }
@@ -137,5 +135,8 @@ export const googleSignInController = async (req, res, next) => {
         .cookie('access_token', token, { httpOnly: true })
         .json(rest);
     }
-  } catch (error) {}
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: 'Internal Server Error' });
+  }
 };

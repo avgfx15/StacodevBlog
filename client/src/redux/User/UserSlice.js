@@ -4,6 +4,7 @@ import {
   newUserRegisterAction,
   registerWithGoogleAction,
   signInUserAction,
+  signOutUserAction,
   updateUserAction,
   uploadProfilePicAction,
 } from './UserActions';
@@ -30,8 +31,8 @@ const userSlice = createSlice({
   },
   extraReducers: (builder) => {
     // + Register New User Success
-    builder.addCase(newUserRegisterAction.fulfilled, (state, action) => {
-      state.currentUser = action.payload;
+    builder.addCase(newUserRegisterAction.fulfilled, (state) => {
+      state.currentUser = null;
       state.successStatus = true;
       state.successMsg = 'User Registered Successfully';
       state.errorMsg = null;
@@ -103,12 +104,19 @@ const userSlice = createSlice({
 
     // + Sign In user Success
     builder.addCase(signInUserAction.fulfilled, (state, action) => {
-      state.currentUser = action.payload;
-      state.isLoading = false;
-      state.error = null;
-      state.successStatus = true;
-      state.successMsg = 'User Signed In Successfully';
-      state.errorMsg = null;
+      if (action.payload.success === false) {
+        state.errorMsg = action.payload.message;
+        state.isLoading = false;
+        state.error = null;
+        state.successStatus = false;
+      } else {
+        state.currentUser = action.payload;
+        state.isLoading = false;
+        state.error = null;
+        state.successStatus = true;
+        state.errorMsg = null;
+        state.successMsg = 'User Signed In Successfully';
+      }
     });
     // & Upload ProfilePic Pending
     builder.addCase(uploadProfilePicAction.pending, (state) => {
@@ -190,6 +198,27 @@ const userSlice = createSlice({
       state.successStatus = true;
       state.successMsg = 'User Account Deleted Successfully';
       state.errorMsg = null;
+    });
+    // & SignOut User Pending
+    builder.addCase(signOutUserAction.pending, (state) => {
+      state.isLoading = true;
+      state.error = null;
+      state.successStatus = false;
+      state.successMsg = null;
+    });
+    // ! SignOut User Reject
+    builder.addCase(signOutUserAction.rejected, (state, action) => {
+      state.isLoading = false;
+      state.error = action.payload;
+      state.successStatus = false;
+      state.errorMsg = 'Error to SignOut User';
+    });
+    // $ SignOut User Reject
+    builder.addCase(signOutUserAction.fulfilled, (state, action) => {
+      state.currentUser = null;
+      state.isLoading = false;
+      state.error = null;
+      state.successMsg = action.payload.message;
     });
   },
 });

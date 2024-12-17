@@ -10,6 +10,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import { toggleTheme } from '../redux/Theme/ThemeSlice';
 import { currentUserState } from '../redux/User/UserSlice';
+import { signOutUserAction } from '../redux/User/UserActions';
 
 // # Main Home Component
 const Header = () => {
@@ -24,6 +25,11 @@ const Header = () => {
   const profilePic = currentUser?.profilePic || '';
   const isProfilePicValid =
     profilePic.startsWith('http://') || profilePic.startsWith('https://');
+
+  // & Handle SignOut User
+  const handlesignOutUser = async () => {
+    dispatch(signOutUserAction());
+  };
 
   // # Render Function
   return (
@@ -80,7 +86,7 @@ const Header = () => {
               <Dropdown.Item>Profile</Dropdown.Item>
             </Link>
             <Dropdown.Divider />
-            <Dropdown.Item>Sign Out</Dropdown.Item>
+            <Dropdown.Item onClick={handlesignOutUser}>Sign Out</Dropdown.Item>
           </Dropdown>
         ) : (
           <Link to='/signin'>

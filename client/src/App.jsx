@@ -8,18 +8,38 @@ import Projects from './pages/Projects';
 import Header from './components/Header';
 import FooterComponent from './components/Footer';
 import PrivateRoute from './components/PrivateRoute';
-import { useSelector } from 'react-redux';
-import { currentUserState } from './redux/User/UserSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+  clearMessageAction,
+  currentUserState,
+  errorMsgState,
+  successMsgState,
+} from './redux/User/UserSlice';
+import { useEffect } from 'react';
 
 const App = () => {
+  const dispatch = useDispatch();
+
   const currentUser = useSelector(currentUserState);
+  console.log(currentUser);
+  const errorMsg = useSelector(errorMsgState);
+  const successMsg = useSelector(successMsgState);
+
+  useEffect(() => {
+    if (successMsg || errorMsg) {
+      setTimeout(() => {
+        dispatch(clearMessageAction());
+      }, 3000);
+    }
+  }, [dispatch, errorMsg, successMsg]);
+
   return (
     <BrowserRouter>
       <Header />
       <Routes>
         <Route path='/' element={<Home />} />
         <Route path='/about' element={<AboutPage />} />
-        {!currentUser && (
+        {currentUser === null && (
           <>
             <Route path='/signup' element={<SignUp />} />
             <Route path='/signin' element={<SignIn />} />

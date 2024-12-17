@@ -4,7 +4,6 @@ import { useDispatch, useSelector } from 'react-redux';
 
 // ~ import all state from userSlice
 import {
-  clearMessageAction,
   currentUserState,
   errorMsgState,
   errorState,
@@ -14,6 +13,7 @@ import {
 
 // ~ Import user Actions from action
 import {
+  signOutUserAction,
   updateUserAction,
   uploadProfilePicAction,
 } from '../redux/User/UserActions';
@@ -25,6 +25,7 @@ import ModalComponent from './ModalComponent';
 const DashProfile = () => {
   // & dispatch hook
   const dispatch = useDispatch();
+
   // & Get Value For CurrentUser
 
   // & Declare local state for Component
@@ -74,20 +75,16 @@ const DashProfile = () => {
     dispatch(uploadProfilePicAction(formData));
   };
 
-  // +
+  // * Handle Update User
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     dispatch(updateUserAction({ inputData, currentUser }));
   };
 
-  useEffect(() => {
-    if (successMsg || errorMsg) {
-      setTimeout(() => {
-        dispatch(clearMessageAction());
-      }, 3000);
-    }
-  }, [dispatch, errorMsg, successMsg]);
+  // & Handle SignOut User
+  const handlesignOutUser = async () => {
+    dispatch(signOutUserAction());
+  };
 
   // # Rander Function
   return (
@@ -180,7 +177,9 @@ const DashProfile = () => {
         >
           Delete Account
         </span>
-        <span className='cursor-pointer'>Sign Out</span>
+        <span className='cursor-pointer' onClick={handlesignOutUser}>
+          Sign Out
+        </span>
       </div>
       {successMsg && (
         <Alert className='mt-5' color='success'>

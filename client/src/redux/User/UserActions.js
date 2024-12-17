@@ -76,15 +76,9 @@ export const signInUserAction = createAsyncThunk(
         body: JSON.stringify(formData),
       });
       const data = await response.json();
+      console.log(data);
 
-      // % Handle Error
-      if (data.success === false) {
-        return;
-      }
-
-      if (response.ok) {
-        return data;
-      }
+      return data;
     } catch (error) {
       return error.message;
     }
@@ -167,3 +161,16 @@ export const deleteUserAction = createAsyncThunk(
     }
   }
 );
+
+export const signOutUserAction = createAsyncThunk('signoutUser', async () => {
+  try {
+    const response = await fetch('/api/user/signout', {
+      method: 'POST',
+    });
+
+    const data = response.json();
+    return data;
+  } catch (error) {
+    return error.message;
+  }
+});

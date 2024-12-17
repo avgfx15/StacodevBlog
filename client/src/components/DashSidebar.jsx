@@ -3,8 +3,11 @@ import { useEffect, useState } from 'react';
 import { HiArrowSmRight, HiUser } from 'react-icons/hi';
 import { FaBlog } from 'react-icons/fa';
 import { Link, useLocation } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { signOutUserAction } from '../redux/User/UserActions';
 
 const DashSidebar = () => {
+  const dispatch = useDispatch();
   const [tab, setTab] = useState('');
   const location = useLocation();
 
@@ -13,6 +16,11 @@ const DashSidebar = () => {
     const tabFromUrl = urlParams.get('tab');
     setTab(tabFromUrl);
   }, [location.search]);
+
+  // & Handle SignOut User
+  const handlesignOutUser = async () => {
+    dispatch(signOutUserAction());
+  };
   return (
     <Sidebar className='w-full md:w-56'>
       <Sidebar.Items>
@@ -39,7 +47,11 @@ const DashSidebar = () => {
               Post
             </Sidebar.Item>
           </Link>
-          <Sidebar.Item icon={HiArrowSmRight} className='cursor-pointer'>
+          <Sidebar.Item
+            icon={HiArrowSmRight}
+            className='cursor-pointer'
+            onClick={handlesignOutUser}
+          >
             Sign Out
           </Sidebar.Item>
         </Sidebar.ItemGroup>

@@ -6,7 +6,11 @@ import { Link, useNavigate } from 'react-router-dom';
 import OAuth from '../components/OAuth.jsx';
 import { signInUserAction } from '../redux/User/UserActions.js';
 
-import { errorState, isLoadingState } from '../redux/User/UserSlice.js';
+import {
+  currentUserState,
+  errorMsgState,
+  isLoadingState,
+} from '../redux/User/UserSlice.js';
 
 // # Main SignIn Function
 const SignIn = () => {
@@ -14,10 +18,13 @@ const SignIn = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
+  const currentUser = useSelector(currentUserState);
+
   // & Declare Variable For FormData
   const [formData, setFormData] = useState({});
 
-  const errorMessage = useSelector(errorState);
+  const errorMessage = useSelector(errorMsgState);
+  console.log(errorMessage);
 
   const isLoading = useSelector(isLoadingState);
 
@@ -34,7 +41,9 @@ const SignIn = () => {
         return 'Please Fill Out All Fields';
       }
       dispatch(signInUserAction(formData));
-      navigate('/');
+      if (currentUser !== null) {
+        navigate('/');
+      }
     } catch (error) {
       return error.message;
     }

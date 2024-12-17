@@ -104,8 +104,24 @@ export const deleteUserByIdController = async (req, res, next) => {
     // - Delete From Db
     await UserSchema.findByIdAndDelete(id);
 
+    // - Clear cookies
+    res.clearCookie('access_token');
+
     return res.status(200).json('User Deleted Successfully.');
   } catch (error) {
     return next(errorHandler(500, 'Failed to delete Your Account'));
+  }
+};
+
+// & SignOut User
+export const signOutUserController = async (req, res, next) => {
+  try {
+    // & Clear Cookies
+    res
+      .clearCookie('access_token')
+      .status(200)
+      .json({ message: 'User SignOut Successfully', success: true });
+  } catch (error) {
+    return next(errorHandler(500, 'Failed to Sign Out User'));
   }
 };
