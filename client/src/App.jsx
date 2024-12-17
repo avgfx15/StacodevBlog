@@ -8,16 +8,23 @@ import Projects from './pages/Projects';
 import Header from './components/Header';
 import FooterComponent from './components/Footer';
 import PrivateRoute from './components/PrivateRoute';
+import { useSelector } from 'react-redux';
+import { currentUserState } from './redux/User/UserSlice';
 
 const App = () => {
+  const currentUser = useSelector(currentUserState);
   return (
     <BrowserRouter>
       <Header />
       <Routes>
         <Route path='/' element={<Home />} />
         <Route path='/about' element={<AboutPage />} />
-        <Route path='/signup' element={<SignUp />} />
-        <Route path='/signin' element={<SignIn />} />
+        {!currentUser && (
+          <>
+            <Route path='/signup' element={<SignUp />} />
+            <Route path='/signin' element={<SignIn />} />
+          </>
+        )}
         <Route element={<PrivateRoute />}>
           <Route path='/dashboard' element={<Dashboard />} />
         </Route>

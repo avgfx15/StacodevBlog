@@ -1,21 +1,18 @@
 import { Alert, Button, TextInput } from 'flowbite-react';
 import { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { currentUserState, imageFileState } from '../redux/User/UserSlice';
 import {
-  updateUserStart,
-  updateUserSuccess,
-  updatUserfailure,
-} from '../redux/User/UserSlice';
+  updateUserAction,
+  uploadProfilePicAction,
+} from '../redux/User/UserActions';
 
 // # Main DashProfile Component
 const DashProfile = () => {
   const dispatch = useDispatch();
   // & Get Value For CurrentUser
-  const { currentUser } = useSelector((state) => state.userReducer);
 
   const [imageFile, setImageFile] = useState(null);
-
-  const [imageFileUrl, setImageFileUrl] = useState(null);
 
   const [inputData, setInputData] = useState({});
 
@@ -23,6 +20,9 @@ const DashProfile = () => {
   const [updateError, setUpdateError] = useState(null);
 
   const filePickerRef = useRef();
+
+  const currentUser = useSelector(currentUserState);
+  const imageFileUrl = useSelector(imageFileState);
 
   const handleProfilePicChange = (e) => {
     const file = e.target.files[0];
@@ -42,55 +42,21 @@ const DashProfile = () => {
   }, [imageFile]);
 
   const uploadImage = async () => {
-    // e.preventDefault();
-    try {
-      const formData = new FormData();
-      formData.append('file', imageFile);
-      const response = await fetch('http://localhost:3200/upload', {
-        method: 'POST',
-        body: formData,
-      });
-      const data = await response.json();
-      console.log(data);
-      setImageFileUrl(data);
-      setInputData({ ...inputData, profilePic: data });
-
-      return data;
-    } catch (error) {
-      console.log(error.message);
-    }
+    const formData = new FormData();
+    formData.append('file', imageFile);
+    dispatch(uploadProfilePicAction(formData));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     if (Object.keys(inputData).length === 0) {
       setUpdateError('No change done');
       return;
     }
-    try {
-      dispatch(updateUserStart());
 
-      const response = await fetch(`/api/user/update/${currentUser._id}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(inputData),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        dispatch(updatUserfailure(data.message));
-        return;
-      } else {
-        dispatch(updateUserSuccess(data));
-        setUpdateMessage('User Profile Updates Successfully');
-      }
-    } catch (error) {
-      dispatch(updatUserfailure(error.message));
-      return;
-    }
+    dispatch(updateUserAction({ inputData, currentUser }));
+    setUpdateMessage('Profile updated successfully');
   };
 
   // # Rander Function

@@ -2,20 +2,22 @@ import { Alert, Button, Label, Spinner, TextInput } from 'flowbite-react';
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import OAuth from '../components/OAuth.jsx';
+import { useDispatch, useSelector } from 'react-redux';
+import { newUserRegisterAction } from '../redux/User/UserActions.js';
+import { errorState, isLoadingState } from '../redux/User/UserSlice.js';
 
 // # Main SignUp Function
 const SignUp = () => {
   // & React Hook
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   // & Declare Variable For FormData
   const [formData, setFormData] = useState({});
 
-  // & Declare ErrorMessage
-  const [errorMessage, setErrorMessage] = useState(null);
+  const errorMessage = useSelector(errorState);
 
-  // & Declare isLoading
-  const [isLoading, setIsLoading] = useState(false);
+  const isLoading = useSelector(isLoadingState);
   // & Handle Change
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.id]: e.target.value.trim() });
@@ -25,36 +27,18 @@ const SignUp = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      setIsLoading(true);
-      setErrorMessage(null);
       if (
         !formData.username ||
         !formData.email ||
         !formData.mobile ||
         !formData.password
       ) {
-        return setErrorMessage('Please Fill Out All Fields');
+        return 'Please Fill Out All Fields';
       }
-      const response = await fetch('/api/auth/signup', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
-      });
-      const data = await response.json();
-
-      // % Handle Error
-      if (data.success === false) {
-        return setErrorMessage(data.message);
-      }
-      setIsLoading(false);
-      if (response.ok) {
-        navigate('/signin');
-      }
+      dispatch(newUserRegisterAction(formData));
+      navigate('/signin');
     } catch (error) {
-      setErrorMessage(error.message);
-      setIsLoading(false);
+      return error.message;
     }
   };
 

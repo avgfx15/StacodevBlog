@@ -9,15 +9,22 @@ import { FaMoon, FaSun } from 'react-icons/fa';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { toggleTheme } from '../redux/Theme/ThemeSlice';
+import { currentUserState } from '../redux/User/UserSlice';
 
 // # Main Home Component
 const Header = () => {
   const path = useLocation().pathname;
 
   const dispatch = useDispatch();
-  const { currentUser } = useSelector((state) => state.userReducer);
+
+  const currentUser = useSelector(currentUserState);
+  console.log(currentUser.profilePic);
 
   const { theme } = useSelector((state) => state.themeReducer);
+
+  const profilePic = currentUser?.profilePic || '';
+  const isProfilePicValid =
+    profilePic.startsWith('http://') || profilePic.startsWith('https://');
 
   // # Render Function
   return (
@@ -59,12 +66,7 @@ const Header = () => {
             label={
               <Avatar
                 alt='User'
-                img={
-                  currentUser.profilePic.startsWith('http://') ||
-                  currentUser.profilePic.startsWith('https://')
-                    ? currentUser.profilePic
-                    : `./uploads/` + currentUser.profilePic
-                }
+                img={isProfilePicValid ? profilePic : `./uploads/` + profilePic}
                 rounded
               />
             }

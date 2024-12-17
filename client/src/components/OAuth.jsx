@@ -5,13 +5,13 @@ import { Button } from 'flowbite-react';
 import { AiFillGoogleCircle } from 'react-icons/ai';
 
 import { getAuth, GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
-import { app } from '../firebaseConfigure';
+import { app } from '../firebaseConfigure.js';
 
 import { useDispatch } from 'react-redux';
 
 import { useNavigate } from 'react-router-dom';
 
-import { signInFailure, signInSuccess } from '../redux/User/UserSlice.js';
+import { registerWithGoogleAction } from '../redux/User/UserActions.js';
 
 // # Main OAuth Function
 const OAuth = () => {
@@ -28,7 +28,6 @@ const OAuth = () => {
 
     try {
       const resultFromGoogle = await signInWithPopup(auth, provider);
-      console.log(resultFromGoogle.user);
 
       const userData = {
         username: resultFromGoogle.user.displayName,
@@ -36,31 +35,10 @@ const OAuth = () => {
         mobile: resultFromGoogle.user.mobile,
         profilePic: resultFromGoogle.user.photoURL,
       };
-      const response = await fetch('/api/auth/google', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: 'Bearer YOUR_API_KEY',
-        },
-        body: JSON.stringify(userData),
-      });
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      console.log(response);
-
-      const data = await response.json();
-      console.log(data);
-
-      if (response.ok) {
-        dispatch(signInSuccess(data));
-        navigate('/');
-      }
+      dispatch(registerWithGoogleAction(userData));
+      navigate('/');
     } catch (error) {
-      const response = await fetch('/api/auth/google');
-      const text = await response.text();
-      console.log(text);
-      dispatch(signInFailure(error.message));
+      console.log(error.message);
     }
   };
 
