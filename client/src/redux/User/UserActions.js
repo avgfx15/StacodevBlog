@@ -76,7 +76,6 @@ export const signInUserAction = createAsyncThunk(
         body: JSON.stringify(formData),
       });
       const data = await response.json();
-      console.log(data);
 
       return data;
     } catch (error) {
@@ -95,6 +94,7 @@ export const uploadProfilePicAction = createAsyncThunk(
         body: formData,
       });
       const data = await response.json();
+
       // % Handle Error
       if (data.success === false) {
         return data.message;

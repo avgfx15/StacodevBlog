@@ -17,14 +17,18 @@ import {
 } from './redux/User/UserSlice';
 import { useEffect } from 'react';
 
+// # Main App Component
 const App = () => {
+  // & Dispatch Hook
   const dispatch = useDispatch();
 
+  // & Get Current State
   const currentUser = useSelector(currentUserState);
-  console.log(currentUser);
+
   const errorMsg = useSelector(errorMsgState);
   const successMsg = useSelector(successMsgState);
 
+  // & Auto Clear Alert for successMsg and errorMsg
   useEffect(() => {
     if (successMsg || errorMsg) {
       setTimeout(() => {
@@ -33,6 +37,7 @@ const App = () => {
     }
   }, [dispatch, errorMsg, successMsg]);
 
+  // # Return Func
   return (
     <BrowserRouter>
       <Header />

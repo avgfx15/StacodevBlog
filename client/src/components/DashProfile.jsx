@@ -58,7 +58,11 @@ const DashProfile = () => {
 
   // $ HandleChange all input field
   const handleChange = async (e) => {
-    setInputData({ ...inputData, [e.target.id]: e.target.value });
+    setInputData({
+      ...inputData,
+      profilePic: imageFileUrl,
+      [e.target.id]: e.target.value,
+    });
   };
 
   // $ If new Image File then render
@@ -66,19 +70,24 @@ const DashProfile = () => {
     if (imageFile) {
       uploadImage();
     }
-  }, [imageFile]);
+  }, [dispatch, imageFile]);
 
   // % Upload Image Func
   const uploadImage = async () => {
     const formData = new FormData();
     formData.append('file', imageFile);
     dispatch(uploadProfilePicAction(formData));
+    setInputData({ ...inputData, profilePic: imageFile });
+    console.log(inputData);
   };
 
   // * Handle Update User
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log(inputData);
+
     dispatch(updateUserAction({ inputData, currentUser }));
+    setImageFile(null);
   };
 
   // & Handle SignOut User

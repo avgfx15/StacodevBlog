@@ -70,9 +70,13 @@ export const signInController = async (req, res, next) => {
       const { password: userPassword, ...rest } = userExist._doc;
 
       // * Create Token
-      const token = jwt.sign({ id: userExist.id }, process.env.JWT_SECRET, {
-        expiresIn: '1h',
-      });
+      const token = jwt.sign(
+        { id: userExist.id, isAdmin: userExist.isAdmin },
+        process.env.JWT_SECRET,
+        {
+          expiresIn: '1h',
+        }
+      );
 
       return res
         .status(200)
@@ -95,9 +99,13 @@ export const googleSignInController = async (req, res, next) => {
       const { password, ...rest } = userExist._doc;
 
       // % User exist then create token and singin
-      const token = jwt.sign({ id: userExist.id }, process.env.JWT_SECRET, {
-        expiresIn: '1h',
-      });
+      const token = jwt.sign(
+        { id: userExist.id, isAdmin: userExist.isAdmin },
+        process.env.JWT_SECRET,
+        {
+          expiresIn: '1h',
+        }
+      );
 
       return res
         .status(200)
@@ -126,9 +134,13 @@ export const googleSignInController = async (req, res, next) => {
       const { password, ...rest } = googleUser._doc;
 
       // * Create Token
-      const token = jwt.sign({ id: googleUser.id }, process.env.JWT_SECRET, {
-        expiresIn: '1h',
-      });
+      const token = jwt.sign(
+        { id: googleUser.id, isAdmin: googleUser.isAdmin },
+        process.env.JWT_SECRET,
+        {
+          expiresIn: '1h',
+        }
+      );
 
       return res
         .status(200)

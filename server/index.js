@@ -54,6 +54,7 @@ const upload = multer({ storage });
 // + Create an endpoint to upload profile picture
 app.post('/upload', upload.single('file'), async (req, res) => {
   const file = req.file; // Save the path to the file
+  console.log(file.filename);
 
   res.json(file.filename);
 });

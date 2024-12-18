@@ -17,7 +17,7 @@ const initialState = {
   successStatus: null,
   successMsg: null,
   errorMsg: null,
-  imageFile: null,
+  imageFileUrl: null,
 };
 
 const userSlice = createSlice({
@@ -111,6 +111,7 @@ const userSlice = createSlice({
         state.successStatus = false;
       } else {
         state.currentUser = action.payload;
+        state.imageFileUrl = null;
         state.isLoading = false;
         state.error = null;
         state.successStatus = true;
@@ -122,7 +123,7 @@ const userSlice = createSlice({
     builder.addCase(uploadProfilePicAction.pending, (state) => {
       state.isLoading = true;
       state.error = null;
-      state.imageFile = null;
+      state.imageFileUrl = null;
       state.successStatus = false;
       state.successMsg = null;
       state.errorMsg = null;
@@ -131,7 +132,7 @@ const userSlice = createSlice({
     builder.addCase(uploadProfilePicAction.rejected, (state, action) => {
       state.isLoading = false;
       state.error = action.payload;
-      state.imageFile = null;
+      state.imageFileUrl = null;
       state.successStatus = false;
       state.successMsg = null;
       state.errorMsg = 'Failed to Upload Profile Pic';
@@ -139,8 +140,7 @@ const userSlice = createSlice({
 
     // + Upload ProfilePic Success
     builder.addCase(uploadProfilePicAction.fulfilled, (state, action) => {
-      state.imageFile = action.payload;
-      state.currentUser.profilePic = action.payload;
+      state.imageFileUrl = action.payload;
       state.isLoading = false;
       state.error = null;
       state.successStatus = true;
@@ -237,6 +237,6 @@ export const errorMsgState = (state) => state.userReducer.errorMsg;
 
 export const successStatus = (state) => state.userReducer.successStatus;
 
-export const imageFileState = (state) => state.userReducer.imageFile;
+export const imageFileState = (state) => state.userReducer.imageFileUrl;
 
 export const { clearMessageAction } = userSlice.actions;
