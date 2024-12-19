@@ -1,3 +1,72 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+body {
+  height: 100vh;
+}
+
+.ql-editor {
+  font-size: 1.1rem;
+}
+
+/* styles.css or your main CSS file */
+
+/* Define sizes */
+.ql-size-extra-small {
+  font-size: 0.75em; /* Size 1 */
+}
+
+.ql-size-small {
+  font-size: 0.875em; /* Size 2 */
+}
+
+.ql-size-medium {
+  font-size: 1em; /* Size 3 */
+}
+
+.ql-size-large {
+  font-size: 1.25em; /* Size 4 */
+}
+
+.ql-size-extra-large {
+  font-size: 2em; /* New size 5 */
+}
+
+.ql-size-very-large {
+  font-size: 2.9em; /* New size 5 */
+}
+
+/* styles.css or your main CSS file */
+.ql-editor {
+  font-family: Arial, sans-serif; /* Default font */
+}
+
+/* Add styles for the new font-family */
+.ql-font-arial {
+  font-family: Arial, sans-serif;
+}
+
+.ql-font-comic-sans {
+  font-family: 'Comic Sans MS', cursive, sans-serif;
+}
+
+.ql-font-courier-new {
+  font-family: 'Courier New', monospace;
+}
+
+.ql-font-georgia {
+  font-family: Georgia, serif;
+}
+
+.ql-font-helvetica {
+  font-family: Helvetica, sans-serif;
+}
+
+.ql-font-lucida {
+  font-family: 'Lucida Grande', sans-serif;
+}
+
+.ql-font-verdana {
+  font-family: Verdana, sans-serif; /* New font-family */
+}

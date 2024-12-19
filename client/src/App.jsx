@@ -11,11 +11,12 @@ import PrivateRoute from './components/PrivateRoute';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   clearMessageAction,
-  currentUserState,
   errorMsgState,
   successMsgState,
 } from './redux/User/UserSlice';
 import { useEffect } from 'react';
+import AdminPrivateRoute from './components/AdminPrivateRoute';
+import CreateNewPost from './pages/CreateNewPost';
 
 // # Main App Component
 const App = () => {
@@ -23,7 +24,6 @@ const App = () => {
   const dispatch = useDispatch();
 
   // & Get Current State
-  const currentUser = useSelector(currentUserState);
 
   const errorMsg = useSelector(errorMsgState);
   const successMsg = useSelector(successMsgState);
@@ -44,16 +44,15 @@ const App = () => {
       <Routes>
         <Route path='/' element={<Home />} />
         <Route path='/about' element={<AboutPage />} />
-        {currentUser === null && (
-          <>
-            <Route path='/signup' element={<SignUp />} />
-            <Route path='/signin' element={<SignIn />} />
-          </>
-        )}
         <Route element={<PrivateRoute />}>
           <Route path='/dashboard' element={<Dashboard />} />
         </Route>
+        <Route element={<AdminPrivateRoute />}>
+          <Route path='/createnewpost' element={<CreateNewPost />} />
+        </Route>
         <Route path='/projects' element={<Projects />} />
+        <Route path='/signup' element={<SignUp />} />
+        <Route path='/signin' element={<SignIn />} />
       </Routes>
       <FooterComponent />
     </BrowserRouter>

@@ -8,6 +8,7 @@ import {
   errorMsgState,
   errorState,
   imageFileState,
+  isLoadingState,
   successMsgState,
 } from '../redux/User/UserSlice';
 
@@ -20,6 +21,7 @@ import {
 
 // ~ Import Components
 import ModalComponent from './ModalComponent';
+import { Link } from 'react-router-dom';
 
 // # Main DashProfile Component
 const DashProfile = () => {
@@ -43,6 +45,7 @@ const DashProfile = () => {
 
   // / Get all current State for User
   const currentUser = useSelector(currentUserState);
+  const isLoading = useSelector(isLoadingState);
   const imageFileUrl = useSelector(imageFileState);
   const error = useSelector(errorState);
   const successMsg = useSelector(successMsgState);
@@ -175,9 +178,21 @@ const DashProfile = () => {
           className=''
           gradientDuoTone='purpleToBlue'
           outline
+          disabled={isLoading}
         >
-          Update
+          {isLoading ? 'loading...' : 'Update'}
         </Button>
+        {currentUser.isAdmin && (
+          <Link to={'/createnewpost'}>
+            <Button
+              type='button'
+              className='w-full'
+              gradientDuoTone='purpleToPink'
+            >
+              Create A New Post
+            </Button>
+          </Link>
+        )}
       </form>
       <div className='text-red-700 mt-5 flex justify-between'>
         <span
