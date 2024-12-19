@@ -8,6 +8,7 @@ body {
 
 .ql-editor {
   font-size: 1.1rem;
+  font-family: Arial, sans-serif; /* Default font */
 }
 
 /* styles.css or your main CSS file */
@@ -35,11 +36,6 @@ body {
 
 .ql-size-very-large {
   font-size: 2.9em; /* New size 5 */
-}
-
-/* styles.css or your main CSS file */
-.ql-editor {
-  font-family: Arial, sans-serif; /* Default font */
 }
 
 /* Add styles for the new font-family */

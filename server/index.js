@@ -16,7 +16,7 @@ import dotenv from 'dotenv';
 import connectDb from './DB/dbConnect.js';
 import userRouter from './ROUTES/userRoutes.js';
 import authRouter from './ROUTES/authRoutes.js';
-// import { errorMiddleware } from './MIDDLEWARE/errorMiddleware.js';
+import postRouter from './ROUTES/postRoutes.js';
 
 // & Configure dotenv variable
 dotenv.config();
@@ -62,6 +62,7 @@ app.post('/upload', upload.single('file'), async (req, res) => {
 // & All Routes
 app.use('/api/user', userRouter);
 app.use('/api/auth', authRouter);
+app.use('/api/post', postRouter);
 
 // & Error Middleware
 app.use((err, req, res, next) => {
