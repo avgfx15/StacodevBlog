@@ -25,6 +25,12 @@ export const signUpController = async (req, res, next) => {
       return next(errorHandler(400, 'All Fields are required'));
     }
 
+    // $ Check User Already Exist
+    const userExist = await UserSchema.findOne({ email });
+    if (userExist) {
+      return next(errorHandler(404, 'User Already Exist'));
+    }
+
     // $ Hash Password
     const hashPassword = bcryptjs.hashSync(password, 10);
 

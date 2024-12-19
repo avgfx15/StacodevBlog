@@ -5,7 +5,7 @@ import { createNewPostController } from '../CONTROLLERS/postControllers.js';
 const postRouter = express.Router();
 
 postRouter.post(
-  '/createnewPost',
+  '/createnewpost',
   verifyAuthUserMiddleware,
   createNewPostController
 );
