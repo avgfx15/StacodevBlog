@@ -14,7 +14,7 @@ const initialState = {
   currentUser: null,
   isLoading: false,
   error: null,
-  successStatus: null,
+  successStatus: false,
   successMsg: null,
   errorMsg: null,
   imageFileUrl: null,

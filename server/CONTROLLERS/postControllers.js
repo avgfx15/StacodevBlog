@@ -5,7 +5,7 @@ export const createNewPostController = async (req, res, next) => {
   const { title, content, category } = req.body;
   try {
     const loggedInUser = req.user;
-    console.log(loggedInUser);
+    console.log(req.body);
 
     if (!loggedInUser.isAdmin) {
       return next(errorHandler(400, 'You are not authorized to Create Post'));
@@ -31,6 +31,7 @@ export const createNewPostController = async (req, res, next) => {
       slug,
       content,
       category,
+      postImage: req.body.postImage,
       author: loggedInUser.id,
     });
 

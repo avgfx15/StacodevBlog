@@ -73,7 +73,7 @@ const DashProfile = () => {
     if (imageFile) {
       uploadImage();
     }
-  }, [dispatch, imageFile]);
+  }, [imageFile]);
 
   // % Upload Image Func
   const uploadImage = async () => {

@@ -5,10 +5,12 @@ import { persistReducer, persistStore } from 'redux-persist';
 
 import storage from 'redux-persist/lib/storage';
 import { themeReducer } from './Theme/ThemeSlice';
+import { postReducer } from './Post/PostSlice';
 
 const rootReducer = combineReducers({
   userReducer,
   themeReducer,
+  postReducer,
 });
 
 const persistConfig = {

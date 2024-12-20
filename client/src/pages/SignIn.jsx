@@ -19,12 +19,12 @@ const SignIn = () => {
   const dispatch = useDispatch();
 
   const currentUser = useSelector(currentUserState);
+  console.log(currentUser);
 
   // & Declare Variable For FormData
   const [formData, setFormData] = useState({});
 
   const errorMessage = useSelector(errorMsgState);
-  console.log(errorMessage);
 
   const isLoading = useSelector(isLoadingState);
 
@@ -41,9 +41,7 @@ const SignIn = () => {
         return 'Please Fill Out All Fields';
       }
       dispatch(signInUserAction(formData));
-      if (currentUser !== null) {
-        navigate('/');
-      }
+      navigate('/');
     } catch (error) {
       return error.message;
     }
