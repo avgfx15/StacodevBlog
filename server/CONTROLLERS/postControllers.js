@@ -46,10 +46,50 @@ export const createNewPostController = async (req, res, next) => {
 // / Get All Post Controller
 export const getAllPostController = async (req, res, next) => {
   try {
-    const allPosts = await PostSchema.find();
+    const startIndex = parseInt(req.query.startIndex) || 0;
+    const limit = parseInt(req.query.limit) || 9;
+    const sortAscending = req.query.order === 'asc' ? 1 : -1;
+
+    const allPosts = await PostSchema.find({
+      ...(req.query.author && { author: req.query.author }),
+      ...(req.query.id && { _id: req.query.id }),
+      ...(req.query.title && { title: req.query.title }),
+      ...(req.query.slug && { slug: req.query.slug }),
+      ...(req.query.category && { category: req.query.category }),
+      ...(req.query.searchText && {
+        $or: [
+          { title: { $regex: req.query.searchText, $options: 'i' } },
+          {
+            content: { $regex: req.query.searchText, $options: 'i' },
+          },
+        ],
+      }),
+    })
+      .sort({ updatedAt: sortAscending })
+      .skip(startIndex)
+      .limit(limit);
+
+    const totalPostsCount = await PostSchema.countDocuments();
+
+    const currentNow = new Date();
+
+    const oneMonthAgo = new Date(
+      currentNow.getFullYear(),
+      currentNow.getMonth() - 1,
+      currentNow.getDate()
+    );
+
+    const lastMonthPosts = await PostSchema.countDocuments({
+      updatedAt: { $gte: oneMonthAgo },
+    });
     res
       .status(201)
-      .json({ message: 'Post created successfully', AllPost: allPosts });
+      .json({
+        message: 'Post created successfully',
+        AllPost: allPosts,
+        totalPostsCount,
+        lastMonthPosts,
+      });
   } catch (error) {
     return next(errorHandler(500, 'Failed to Get All Posts'));
   }
