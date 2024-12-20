@@ -6,11 +6,7 @@ import QuillEditor from '../components/QuillEditor';
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import {
-  currentUserState,
-  errorState,
-  isLoadingState,
-} from '../redux/User/UserSlice';
+import { currentUserState } from '../redux/User/UserSlice';
 import {
   createNewPostAction,
   uploadPostImageAction,
@@ -35,10 +31,9 @@ const CreateNewPost = () => {
 
   // / Get all current State for User
   const currentUser = useSelector(currentUserState);
-  const isLoading = useSelector(isLoadingState);
+  console.log(currentUser);
+
   const postImageUrl = useSelector(postImageUrlState);
-  const error = useSelector(errorState);
-  console.log(postImageUrl);
 
   // & handle Post Image Change
   const handlePostImageChange = (e) => {
@@ -73,12 +68,6 @@ const CreateNewPost = () => {
 
     dispatch(createNewPostAction(inputData));
   };
-
-  // useEffect(() => {
-  //   if (postImage) {
-  //     handleUploadPostImage();
-  //   }
-  // }, [postImage]);
 
   return (
     <div className='p-3 max-w-4xl mx-auto min-h-screen'>

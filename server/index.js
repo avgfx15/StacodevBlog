@@ -62,7 +62,7 @@ app.post('/upload', upload.single('file'), async (req, res) => {
 // & All Routes
 app.use('/api/user', userRouter);
 app.use('/api/auth', authRouter);
-app.use('/api/post', postRouter);
+app.use('/api/posts', postRouter);
 
 // & Error Middleware
 app.use((err, req, res, next) => {

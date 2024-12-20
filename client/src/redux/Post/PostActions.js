@@ -31,7 +31,7 @@ export const createNewPostAction = createAsyncThunk(
   'createNewPostAction',
   async (newPostData) => {
     try {
-      const response = await fetch('api/post/createnewpost', {
+      const response = await fetch('api/posts/createnewpost', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

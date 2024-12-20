@@ -5,7 +5,6 @@ export const createNewPostController = async (req, res, next) => {
   const { title, content, category } = req.body;
   try {
     const loggedInUser = req.user;
-    console.log(req.body);
 
     if (!loggedInUser.isAdmin) {
       return next(errorHandler(400, 'You are not authorized to Create Post'));
@@ -41,5 +40,17 @@ export const createNewPostController = async (req, res, next) => {
       .json({ message: 'Post created successfully', newPost: savedPost });
   } catch (error) {
     return next(errorHandler(500, 'Failed to Create New Post'));
+  }
+};
+
+// / Get All Post Controller
+export const getAllPostController = async (req, res, next) => {
+  try {
+    const allPosts = await PostSchema.find();
+    res
+      .status(201)
+      .json({ message: 'Post created successfully', AllPost: allPosts });
+  } catch (error) {
+    return next(errorHandler(500, 'Failed to Get All Posts'));
   }
 };

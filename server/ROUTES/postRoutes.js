@@ -1,9 +1,16 @@
 import express from 'express';
 import { verifyAuthUserMiddleware } from '../MIDDLEWARE/verifyAuthUser.js';
-import { createNewPostController } from '../CONTROLLERS/postControllers.js';
+import {
+  createNewPostController,
+  getAllPostController,
+} from '../CONTROLLERS/postControllers.js';
 
 const postRouter = express.Router();
 
+// / Get All Post
+postRouter.get('/', getAllPostController);
+
+// + Create new Post
 postRouter.post(
   '/createnewpost',
   verifyAuthUserMiddleware,
