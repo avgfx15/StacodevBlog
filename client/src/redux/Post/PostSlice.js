@@ -51,11 +51,12 @@ const postSlice = createSlice({
       state.isPostLoading = true;
       state.postError = null;
     });
-    // ! create New Post Rejected
+    // + create New Post Rejected
     builder.addCase(createNewPostAction.fulfilled, (state, action) => {
       state.isPostLoading = false;
       state.allPost = [...state.post, action.payload];
       state.postError = action.payload;
+      state.postImageUrl = null;
     });
     // & Get All Posts Pending
     builder.addCase(getAllPostsAction.pending, (state) => {

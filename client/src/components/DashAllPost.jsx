@@ -3,30 +3,54 @@ import {
   allPostState,
   postsByLoggedInUserState,
 } from '../redux/Post/PostSlice';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { postsByLoggedInUserAction } from '../redux/Post/PostActions';
 import { currentUserState } from '../redux/User/UserSlice';
-import { Table } from 'flowbite-react';
+import { Button, Table } from 'flowbite-react';
 import { Link } from 'react-router-dom';
 
+// # DashAllPost Component
 const DashAllPost = () => {
   const dispatch = useDispatch();
 
+  // const [showMore, setShowMore] = useState(true);
+  const [visiblePosts, setVisiblePosts] = useState(9); // Initially show 9 posts
+
+  const handleShowMorePost = () => {
+    setVisiblePosts((prev) => prev + 9); // Increase by 9 more posts
+  };
+
+  // & Get Current User
   const currentUser = useSelector(currentUserState);
 
+  // & Get All Post
   const allPost = useSelector(allPostState);
 
+  // & Get All Post by currentUser
   const postsByLoggedInUser = useSelector(postsByLoggedInUserState);
 
+  const displayedPosts = postsByLoggedInUser.slice(0, visiblePosts);
+  // & Manage Show More State
+  // useEffect(() => {
+  //   if (postsByLoggedInUser.length > 9) {
+  //     setShowMore(false);
+  //   } else {
+  //     setShowMore(true);
+  //   }
+  // }, [postsByLoggedInUser]);
+
+  // & Get Total Count of All Post
   const totalPostCount = allPost.length;
   console.log(totalPostCount);
 
+  // & Mount All Post By currentUser
   useEffect(() => {
     if (currentUser.isAdmin) {
       dispatch(postsByLoggedInUserAction(currentUser));
     }
   }, [currentUser, dispatch]);
 
+  // # render
   return (
     <div className='table-auto overflow-x-scroll md:mx-auto p-3 scrollbar scrollbar-track-slate-100 scrollbar-thumb-slate-300 dark:scrollbar-track-slate-700 dark:scrollbar-thumb-slate-600'>
       {currentUser.isAdmin && postsByLoggedInUser.length > 0 ? (
@@ -41,7 +65,7 @@ const DashAllPost = () => {
               <Table.HeadCell>Delete</Table.HeadCell>
             </Table.Head>
             <Table.Body className='divide-y'>
-              {postsByLoggedInUser.map((post) => (
+              {displayedPosts.map((post) => (
                 <Table.Row
                   key={post._id}
                   className='bg-white dark:bg-gray-600 dark:border-gray-900'
@@ -90,6 +114,14 @@ const DashAllPost = () => {
               ))}
             </Table.Body>
           </Table>
+          {visiblePosts < postsByLoggedInUser.length && (
+            <Button
+              onClick={handleShowMorePost}
+              className='w-full text-white self-center my-3 text-lg'
+            >
+              Show More
+            </Button>
+          )}
         </div>
       ) : (
         <h3>There is No Post By You.</h3>

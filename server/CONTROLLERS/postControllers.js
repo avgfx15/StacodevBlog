@@ -64,10 +64,7 @@ export const getAllPostController = async (req, res, next) => {
           },
         ],
       }),
-    })
-      .sort({ updatedAt: sortAscending })
-      .skip(startIndex)
-      .limit(limit);
+    }).sort({ updatedAt: sortAscending });
 
     const totalPostsCount = await PostSchema.countDocuments();
 
@@ -82,14 +79,12 @@ export const getAllPostController = async (req, res, next) => {
     const lastMonthPosts = await PostSchema.countDocuments({
       updatedAt: { $gte: oneMonthAgo },
     });
-    res
-      .status(201)
-      .json({
-        message: 'Post created successfully',
-        AllPost: allPosts,
-        totalPostsCount,
-        lastMonthPosts,
-      });
+    res.status(201).json({
+      message: 'Post created successfully',
+      AllPost: allPosts,
+      totalPostsCount,
+      lastMonthPosts,
+    });
   } catch (error) {
     return next(errorHandler(500, 'Failed to Get All Posts'));
   }

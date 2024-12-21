@@ -24,14 +24,14 @@ const CreateNewPost = () => {
 
   const [editorContent, setEditorContent] = useState('');
 
+  // % Handle Content Change in ReactQuill
   const handleEditorChange = (content) => {
     setEditorContent(content); // Update the state with the new content
     setInputData({ ...inputData, content });
   };
 
   // / Get all current State for User
-  const currentUser = useSelector(currentUserState);
-  console.log(currentUser);
+  // const currentUser = useSelector(currentUserState);
 
   const postImageUrl = useSelector(postImageUrlState);
 
@@ -40,10 +40,6 @@ const CreateNewPost = () => {
     const file = e.target.files[0];
     if (file) {
       setPostImage(e.target.files[0]);
-    } else {
-      console.log('Please add File');
-
-      setPostImage(null);
     }
   };
 
@@ -55,18 +51,21 @@ const CreateNewPost = () => {
     const formData = new FormData();
     formData.append('file', postImage);
     dispatch(uploadPostImageAction(formData));
-    setInputData({
-      ...inputData,
-      postImage: postImageUrl,
-    });
-    console.log(inputData);
   };
 
-  const handleSubmit = (e) => {
+  // % Handle Submit
+  const handleSubmit = async (e) => {
     e.preventDefault(); // Prevent default form submission
-    console.log(inputData);
 
-    dispatch(createNewPostAction(inputData));
+    setInputData((prevData) => {
+      const updatedData = { ...prevData, postImage: postImageUrl };
+
+      dispatch(createNewPostAction(updatedData)); // Use updated data
+
+      return updatedData; // Return updated state
+    });
+
+    setPostImage(null);
   };
 
   return (

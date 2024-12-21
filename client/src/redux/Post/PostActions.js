@@ -7,11 +7,14 @@ export const uploadPostImageAction = createAsyncThunk(
   'uploadPostImageAction',
   async (formData) => {
     try {
+      console.log('Uplaod Post Image');
+
       const response = await fetch(baseUrl + 'upload', {
         method: 'POST',
         body: formData,
       });
       const data = await response.json();
+      console.log(data);
 
       // % Handle Error
       if (data.success === false) {
@@ -30,6 +33,7 @@ export const uploadPostImageAction = createAsyncThunk(
 export const createNewPostAction = createAsyncThunk(
   'createNewPostAction',
   async (newPostData) => {
+    console.log(newPostData);
     try {
       const response = await fetch('api/posts/createnewpost', {
         method: 'POST',
@@ -39,13 +43,13 @@ export const createNewPostAction = createAsyncThunk(
         body: JSON.stringify(newPostData),
       });
       const data = await response.json();
-
       // % Handle Error
       if (data.success === false) {
         return data.message;
       }
-
       if (response.ok) {
+        console.log('New Post Created');
+        console.log(data);
         return data;
       }
     } catch (error) {
@@ -64,7 +68,6 @@ export const getAllPostsAction = createAsyncThunk(
         method: 'GET',
       });
       const data = await response.json();
-      console.log(data);
 
       // % Handle Error
       if (data.success === false) {
@@ -93,7 +96,6 @@ export const postsByLoggedInUserAction = createAsyncThunk(
         }
       );
       const data = await response.json();
-      console.log(data);
 
       // % Handle Error
       if (data.success === false) {

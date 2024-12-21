@@ -81,13 +81,11 @@ const DashProfile = () => {
     formData.append('file', imageFile);
     dispatch(uploadProfilePicAction(formData));
     setInputData({ ...inputData, profilePic: imageFile });
-    console.log(inputData);
   };
 
   // * Handle Update User
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(inputData);
 
     dispatch(updateUserAction({ inputData, currentUser }));
     setImageFile(null);
