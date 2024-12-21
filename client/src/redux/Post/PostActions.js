@@ -54,3 +54,58 @@ export const createNewPostAction = createAsyncThunk(
     }
   }
 );
+
+// / Get All Posts
+export const getAllPostsAction = createAsyncThunk(
+  'getAllPostsAction',
+  async () => {
+    try {
+      const response = await fetch('api/posts/getallposts', {
+        method: 'GET',
+      });
+      const data = await response.json();
+      console.log(data);
+
+      // % Handle Error
+      if (data.success === false) {
+        return data.message;
+      }
+      // % Check if response is OK
+      if (response.ok) {
+        return data.AllPost;
+      }
+    } catch (error) {
+      console.log(error.message);
+      return error.message;
+    }
+  }
+);
+
+// / Get All Posts
+export const postsByLoggedInUserAction = createAsyncThunk(
+  'postsByLoggedInUser',
+  async (currentUser) => {
+    try {
+      const response = await fetch(
+        `api/posts/getallposts?author=${currentUser._id}`,
+        {
+          method: 'GET',
+        }
+      );
+      const data = await response.json();
+      console.log(data);
+
+      // % Handle Error
+      if (data.success === false) {
+        return data.message;
+      }
+      // % Check if response is OK
+      if (response.ok) {
+        return data.AllPost;
+      }
+    } catch (error) {
+      console.log(error.message);
+      return error.message;
+    }
+  }
+);

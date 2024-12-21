@@ -8,7 +8,7 @@ import {
 const postRouter = express.Router();
 
 // / Get All Post
-postRouter.get('/', getAllPostController);
+postRouter.get('/getallposts', getAllPostController);
 
 // + Create new Post
 postRouter.post(

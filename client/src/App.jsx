@@ -17,6 +17,7 @@ import {
 import { useEffect } from 'react';
 import AdminPrivateRoute from './components/AdminPrivateRoute';
 import CreateNewPost from './pages/CreateNewPost';
+import { getAllPostsAction } from './redux/Post/PostActions';
 
 // # Main App Component
 const App = () => {
@@ -30,6 +31,7 @@ const App = () => {
 
   // & Auto Clear Alert for successMsg and errorMsg
   useEffect(() => {
+    dispatch(getAllPostsAction());
     if (successMsg || errorMsg) {
       setTimeout(() => {
         dispatch(clearMessageAction());

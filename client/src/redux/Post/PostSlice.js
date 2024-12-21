@@ -1,5 +1,10 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { createNewPostAction, uploadPostImageAction } from './PostActions';
+import {
+  createNewPostAction,
+  getAllPostsAction,
+  postsByLoggedInUserAction,
+  uploadPostImageAction,
+} from './PostActions';
 
 const initialState = {
   allPost: [],
@@ -8,6 +13,7 @@ const initialState = {
   currentPost: null,
   isPostLoading: false,
   postError: null,
+  postsByLoggedInUser: [],
 };
 
 const postSlice = createSlice({
@@ -40,14 +46,52 @@ const postSlice = createSlice({
       state.successStatus = true;
       state.postError = null;
     });
-
+    // & create New Post Pending
     builder.addCase(createNewPostAction.pending, (state) => {
       state.isPostLoading = true;
       state.postError = null;
     });
+    // ! create New Post Rejected
     builder.addCase(createNewPostAction.fulfilled, (state, action) => {
       state.isPostLoading = false;
-      state.post = [...state.post, action.payload];
+      state.allPost = [...state.post, action.payload];
+      state.postError = action.payload;
+    });
+    // & Get All Posts Pending
+    builder.addCase(getAllPostsAction.pending, (state) => {
+      state.isPostLoading = true;
+      state.allPost = [];
+      state.postError = null;
+    });
+    // / Get All Posts
+    builder.addCase(getAllPostsAction.fulfilled, (state, action) => {
+      state.isPostLoading = false;
+      state.allPost = action.payload;
+      state.postError = null;
+    });
+    // ! Get All Post Rejected
+    builder.addCase(getAllPostsAction.rejected, (state, action) => {
+      state.isPostLoading = false;
+      state.postError = action.payload;
+      state.post = [];
+    });
+    // & Get All Posts By LoggedInUser Pending
+    builder.addCase(postsByLoggedInUserAction.pending, (state) => {
+      state.isPostLoading = true;
+      state.postsByLoggedInUser = [];
+      state.postError = null;
+    });
+    // / Get All Posts By LoggedInUser
+    builder.addCase(postsByLoggedInUserAction.fulfilled, (state, action) => {
+      state.isPostLoading = false;
+      state.postsByLoggedInUser = action.payload;
+      state.postError = null;
+    });
+    // ! Get All Post By LoggedInUser Rejected
+    builder.addCase(postsByLoggedInUserAction.rejected, (state, action) => {
+      state.isPostLoading = false;
+      state.postError = action.payload;
+      state.postsByLoggedInUser = [];
     });
   },
 });
@@ -55,6 +99,8 @@ const postSlice = createSlice({
 export const postReducer = postSlice.reducer;
 
 export const allPostState = (state) => state.postReducer.allPost;
+export const postsByLoggedInUserState = (state) =>
+  state.postReducer.postsByLoggedInUser;
 export const postState = (state) => state.postReducer.post;
 export const postImageUrlState = (state) => state.postReducer.postImageUrl;
 export const currentPostState = (state) => state.postReducer.currentPost;
