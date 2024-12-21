@@ -70,18 +70,18 @@ const DashProfile = () => {
 
   // $ If new Image File then render
   useEffect(() => {
+    const uploadImage = async () => {
+      const formData = new FormData();
+      formData.append('file', imageFile);
+      dispatch(uploadProfilePicAction(formData));
+      setInputData({ ...inputData, profilePic: imageFile });
+    };
     if (imageFile) {
       uploadImage();
     }
-  }, [imageFile]);
+  }, [dispatch, imageFile, inputData]);
 
   // % Upload Image Func
-  const uploadImage = async () => {
-    const formData = new FormData();
-    formData.append('file', imageFile);
-    dispatch(uploadProfilePicAction(formData));
-    setInputData({ ...inputData, profilePic: imageFile });
-  };
 
   // * Handle Update User
   const handleSubmit = async (e) => {

@@ -1,8 +1,5 @@
 import { useDispatch, useSelector } from 'react-redux';
-import {
-  allPostState,
-  postsByLoggedInUserState,
-} from '../redux/Post/PostSlice';
+import { postsByLoggedInUserState } from '../redux/Post/PostSlice';
 import { useEffect, useState } from 'react';
 import { postsByLoggedInUserAction } from '../redux/Post/PostActions';
 import { currentUserState } from '../redux/User/UserSlice';
@@ -13,9 +10,10 @@ import { Link } from 'react-router-dom';
 const DashAllPost = () => {
   const dispatch = useDispatch();
 
-  // const [showMore, setShowMore] = useState(true);
-  const [visiblePosts, setVisiblePosts] = useState(9); // Initially show 9 posts
+  // & Initially show 9 posts
+  const [visiblePosts, setVisiblePosts] = useState(9);
 
+  // % Handle Show Post with every 9 count
   const handleShowMorePost = () => {
     setVisiblePosts((prev) => prev + 9); // Increase by 9 more posts
   };
@@ -23,25 +21,10 @@ const DashAllPost = () => {
   // & Get Current User
   const currentUser = useSelector(currentUserState);
 
-  // & Get All Post
-  const allPost = useSelector(allPostState);
-
   // & Get All Post by currentUser
   const postsByLoggedInUser = useSelector(postsByLoggedInUserState);
 
   const displayedPosts = postsByLoggedInUser.slice(0, visiblePosts);
-  // & Manage Show More State
-  // useEffect(() => {
-  //   if (postsByLoggedInUser.length > 9) {
-  //     setShowMore(false);
-  //   } else {
-  //     setShowMore(true);
-  //   }
-  // }, [postsByLoggedInUser]);
-
-  // & Get Total Count of All Post
-  const totalPostCount = allPost.length;
-  console.log(totalPostCount);
 
   // & Mount All Post By currentUser
   useEffect(() => {

@@ -46,8 +46,6 @@ export const createNewPostController = async (req, res, next) => {
 // / Get All Post Controller
 export const getAllPostController = async (req, res, next) => {
   try {
-    const startIndex = parseInt(req.query.startIndex) || 0;
-    const limit = parseInt(req.query.limit) || 9;
     const sortAscending = req.query.order === 'asc' ? 1 : -1;
 
     const allPosts = await PostSchema.find({

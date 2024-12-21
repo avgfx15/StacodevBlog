@@ -6,20 +6,13 @@ import { Link, useNavigate } from 'react-router-dom';
 import OAuth from '../components/OAuth.jsx';
 import { signInUserAction } from '../redux/User/UserActions.js';
 
-import {
-  currentUserState,
-  errorMsgState,
-  isLoadingState,
-} from '../redux/User/UserSlice.js';
+import { errorMsgState, isLoadingState } from '../redux/User/UserSlice.js';
 
 // # Main SignIn Function
 const SignIn = () => {
   // & React Hook
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
-  const currentUser = useSelector(currentUserState);
-  console.log(currentUser);
 
   // & Declare Variable For FormData
   const [formData, setFormData] = useState({});

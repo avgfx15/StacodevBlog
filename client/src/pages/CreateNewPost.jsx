@@ -6,7 +6,6 @@ import QuillEditor from '../components/QuillEditor';
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { currentUserState } from '../redux/User/UserSlice';
 import {
   createNewPostAction,
   uploadPostImageAction,
