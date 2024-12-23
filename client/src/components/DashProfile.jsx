@@ -14,6 +14,7 @@ import {
 
 // ~ Import user Actions from action
 import {
+  deleteUserAction,
   signOutUserAction,
   updateUserAction,
   uploadProfilePicAction,
@@ -21,12 +22,14 @@ import {
 
 // ~ Import Components
 import ModalComponent from './ModalComponent';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 // # Main DashProfile Component
 const DashProfile = () => {
   // & dispatch hook
   const dispatch = useDispatch();
+
+  const navigate = useNavigate();
 
   // & Get Value For CurrentUser
 
@@ -51,11 +54,14 @@ const DashProfile = () => {
   const successMsg = useSelector(successMsgState);
   const errorMsg = useSelector(errorMsgState);
 
+  console.log(currentUser.profilePic);
+
   // $ Handle change profilePic
   const handleProfilePicChange = (e) => {
     const file = e.target.files[0];
+
     if (file) {
-      setImageFile(e.target.files[0]);
+      setImageFile(file);
     }
   };
 
@@ -70,30 +76,48 @@ const DashProfile = () => {
 
   // $ If new Image File then render
   useEffect(() => {
-    const uploadImage = async () => {
-      const formData = new FormData();
-      formData.append('file', imageFile);
-      dispatch(uploadProfilePicAction(formData));
-      setInputData({ ...inputData, profilePic: imageFile });
-    };
     if (imageFile) {
       uploadImage();
     }
-  }, [dispatch, imageFile, inputData]);
+    setImageFile(null);
+  }, [dispatch, imageFile]);
 
   // % Upload Image Func
+  const uploadImage = async () => {
+    const formData = new FormData();
+    formData.append('file', imageFile);
+
+    dispatch(uploadProfilePicAction(formData));
+  };
+
+  useEffect(() => {
+    if (imageFileUrl) {
+      setInputData({
+        ...inputData,
+        profilePic: imageFileUrl,
+      });
+    }
+  }, [imageFileUrl]);
 
   // * Handle Update User
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log(inputData);
 
     dispatch(updateUserAction({ inputData, currentUser }));
+
     setImageFile(null);
   };
 
   // & Handle SignOut User
   const handlesignOutUser = async () => {
     dispatch(signOutUserAction());
+  };
+
+  // - Handle Delete User Function
+  const handleToDeleteUser = async () => {
+    dispatch(deleteUserAction(currentUser));
+    navigate('/signin');
   };
 
   // # Rander Function
@@ -218,6 +242,9 @@ const DashProfile = () => {
       <ModalComponent
         showModalForm={showModalForm}
         setShowModalForm={setShowModalForm}
+        message='Are you sure you want to delete your account ?'
+        actionType='user'
+        handleToDeleteUser={handleToDeleteUser}
       />
     </div>
   );

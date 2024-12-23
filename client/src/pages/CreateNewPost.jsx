@@ -111,7 +111,7 @@ const CreateNewPost = () => {
             Upload Image
           </Button>
         </div>
-        {postImage !== null && (
+        {postImageUrl !== null && (
           <img
             src={'./uploads/' + postImageUrl}
             className='w-full h-72 object-cover'

@@ -18,6 +18,7 @@ export const updateUserController = async (req, res, next) => {
 
   // & Get userId from cookie
   const userId = req.user.id;
+  console.log(id, userId);
 
   // * Check loggedInUser and params user id not matched send error
   if (userId !== id) {
@@ -61,6 +62,7 @@ export const updateUserController = async (req, res, next) => {
       );
     }
   }
+  console.log(req.body.profilePic);
 
   try {
     // & Update user with new password

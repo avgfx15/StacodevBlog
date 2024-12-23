@@ -1,30 +1,30 @@
 import { Button, Modal } from 'flowbite-react';
 
-import { useNavigate } from 'react-router-dom';
-
 // ~ Import PropTypes
 import PropTypes from 'prop-types';
 
 import { HiOutlineExclamationCircle } from 'react-icons/hi2';
-import { useDispatch, useSelector } from 'react-redux';
-import { currentUserState } from '../redux/User/UserSlice';
-import { deleteUserAction } from '../redux/User/UserActions';
 
 // # Main Modal COmponent
-const ModalComponent = ({ showModalForm, setShowModalForm }) => {
-  const dispatch = useDispatch();
-
-  const navigate = useNavigate();
-
-  // & Get Value for currentUserState
-  const currentUser = useSelector(currentUserState);
-
-  // - Handle Delete User Function
-  const handleToDelete = async () => {
-    dispatch(deleteUserAction(currentUser));
-    navigate('/signin');
+const ModalComponent = ({
+  showModalForm,
+  setShowModalForm,
+  message,
+  actionType,
+  handleDeletePost,
+  handleToDeleteUser,
+}) => {
+  const handleConfirmDelete = async () => {
+    if (actionType === 'user') {
+      // Call the delete user function
+      console.log('Deleting user...');
+      handleToDeleteUser();
+    } else if (actionType === 'post') {
+      // Call the delete post function
+      console.log('Deleting post...');
+      handleDeletePost();
+    }
   };
-
   // #Modal Component Render
   return (
     <Modal
@@ -42,10 +42,10 @@ const ModalComponent = ({ showModalForm, setShowModalForm }) => {
             mx-auto mb-4'
           />
           <h3 className='mb-5 text-lg text-gray-600 dark:text-gray-600'>
-            Are you sure you want to delete your account?
+            {message}
           </h3>
           <div className='flex justify-center gap-5'>
-            <Button color='failure' onClick={handleToDelete}>
+            <Button color='failure' onClick={handleConfirmDelete}>
               Yes, I am Sure
             </Button>
             <Button color='info' onClick={() => setShowModalForm(false)}>
@@ -63,6 +63,10 @@ ModalComponent.propTypes = {
   // & Validate that setShowModalForm is a required function
   setShowModalForm: PropTypes.func.isRequired,
   showModalForm: PropTypes.bool.isRequired,
+  message: PropTypes.string.isRequired,
+  handleDeletePost: PropTypes.func,
+  handleToDeleteUser: PropTypes.func,
+  actionType: PropTypes.string.isRequired,
 };
 
 export default ModalComponent;

@@ -111,3 +111,31 @@ export const postsByLoggedInUserAction = createAsyncThunk(
     }
   }
 );
+
+// - Delete Post By PostId and author
+
+export const deletePostByPostIdByAuthorAction = createAsyncThunk(
+  'deletePostByAuthor',
+  async ({ postId, authorId }) => {
+    try {
+      const response = await fetch(
+        `/api/posts/deletepost/${postId}/${authorId}`,
+        {
+          method: 'DELETE',
+        }
+      );
+
+      const data = await response.json();
+
+      // % Handle Error
+      if (data.success === false) {
+        return data.message;
+      }
+      if (response.ok) {
+        return { data, postId };
+      }
+    } catch (error) {
+      return error.message;
+    }
+  }
+);

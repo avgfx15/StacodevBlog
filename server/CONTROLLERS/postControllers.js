@@ -87,3 +87,37 @@ export const getAllPostController = async (req, res, next) => {
     return next(errorHandler(500, 'Failed to Get All Posts'));
   }
 };
+
+// - Delete Post By PostId and Author
+
+export const deletePostController = async (req, res, next) => {
+  try {
+    const postId = req.params.postId;
+    const user = req.user;
+
+    // & Check if loggedInUser is Admin
+    if (!user.isAdmin) {
+      return next(
+        errorHandler(403, 'You are not authorized to delete the Post')
+      );
+    }
+
+    // & Find Post by id
+    const post = await PostSchema.findById(postId);
+
+    // & Check Post author is loggedInUser or not
+    if (post.author.toString() !== user.id) {
+      return next(errorHandler(403, 'You are not the author of this post'));
+    }
+
+    // & If no post found
+    if (!post) {
+      return next(errorHandler(404, 'Post not found'));
+    }
+
+    await PostSchema.findByIdAndDelete(postId);
+    res.status(200).json({ message: 'Post deleted successfully' });
+  } catch (error) {
+    return next(errorHandler(500, 'Failed to delete Post'));
+  }
+};

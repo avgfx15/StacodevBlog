@@ -22,9 +22,10 @@ const Header = () => {
 
   const { theme } = useSelector((state) => state.themeReducer);
 
-  const profilePic = currentUser?.profilePic || '';
+  const myProfilePic = currentUser?.profilePic;
   const isProfilePicValid =
-    profilePic.startsWith('http://') || profilePic.startsWith('https://');
+    myProfilePic &&
+    (myProfilePic.startsWith('http://') || myProfilePic.startsWith('https://'));
 
   // & Handle SignOut User
   const handlesignOutUser = async () => {
@@ -71,7 +72,9 @@ const Header = () => {
             label={
               <Avatar
                 alt='User'
-                img={isProfilePicValid ? profilePic : `./uploads/` + profilePic}
+                img={
+                  isProfilePicValid ? myProfilePic : `./uploads/` + myProfilePic
+                }
                 rounded
               />
             }

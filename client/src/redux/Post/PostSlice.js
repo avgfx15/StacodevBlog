@@ -1,6 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import {
   createNewPostAction,
+  deletePostByPostIdByAuthorAction,
   getAllPostsAction,
   postsByLoggedInUserAction,
   uploadPostImageAction,
@@ -14,6 +15,7 @@ const initialState = {
   isPostLoading: false,
   postError: null,
   postsByLoggedInUser: [],
+  message: null,
 };
 
 const postSlice = createSlice({
@@ -51,12 +53,17 @@ const postSlice = createSlice({
       state.isPostLoading = true;
       state.postError = null;
     });
-    // + create New Post Rejected
+    // + create New Post fulfilled
     builder.addCase(createNewPostAction.fulfilled, (state, action) => {
       state.isPostLoading = false;
       state.allPost = [...state.post, action.payload];
       state.postError = action.payload;
       state.postImageUrl = null;
+    });
+    // ! Get All Post Rejected
+    builder.addCase(createNewPostAction.rejected, (state, action) => {
+      state.isPostLoading = false;
+      state.postError = action.payload;
     });
     // & Get All Posts Pending
     builder.addCase(getAllPostsAction.pending, (state) => {
@@ -94,6 +101,28 @@ const postSlice = createSlice({
       state.postError = action.payload;
       state.postsByLoggedInUser = [];
     });
+    // & Delete Post By author pending
+    builder.addCase(deletePostByPostIdByAuthorAction.pending, (state) => {
+      state.isPostLoading = true;
+      state.postError = null;
+    });
+    // - Delete Post By author
+    builder.addCase(
+      deletePostByPostIdByAuthorAction.fulfilled,
+      (state, action) => {
+        const { data, postId } = action.payload;
+        console.log(postId);
+
+        state.isPostLoading = false;
+        state.postError = null;
+        state.message = data;
+        console.log('Posts Before Deletion:', state.postsByLoggedInUser);
+        state.postsByLoggedInUser = state.postsByLoggedInUser.filter((post) => {
+          return post._id !== postId;
+        });
+        console.log('Posts After Deletion:', state.postsByLoggedInUser);
+      }
+    );
   },
 });
 
@@ -107,3 +136,4 @@ export const postImageUrlState = (state) => state.postReducer.postImageUrl;
 export const currentPostState = (state) => state.postReducer.currentPost;
 export const isPostLoadingState = (state) => state.postReducer.isPostLoading;
 export const postErrorState = (state) => state.postReducer.postError;
+export const messageState = (state) => state.postReducer.message;

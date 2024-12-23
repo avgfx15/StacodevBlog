@@ -100,6 +100,7 @@ export const uploadProfilePicAction = createAsyncThunk(
         return data.message;
       }
       if (response.ok) {
+        console.log('9 - ', data);
         return data;
       }
     } catch (error) {
@@ -112,7 +113,7 @@ export const uploadProfilePicAction = createAsyncThunk(
 export const updateUserAction = createAsyncThunk(
   'updateUser',
   async ({ inputData, currentUser }) => {
-    console.log(inputData, currentUser);
+    console.log(inputData);
 
     try {
       if (Object.keys(inputData).length === 0) {
@@ -131,6 +132,8 @@ export const updateUserAction = createAsyncThunk(
       if (!response.ok) {
         return data.message;
       } else {
+        console.log(data);
+
         return data;
       }
     } catch (error) {
@@ -143,8 +146,6 @@ export const updateUserAction = createAsyncThunk(
 export const deleteUserAction = createAsyncThunk(
   'deleteUser',
   async (currentUser) => {
-    console.log(currentUser._id);
-
     try {
       const response = await fetch(`/api/user/delete/${currentUser._id}`, {
         method: 'DELETE',

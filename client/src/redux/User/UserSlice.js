@@ -140,6 +140,8 @@ const userSlice = createSlice({
 
     // + Upload ProfilePic Success
     builder.addCase(uploadProfilePicAction.fulfilled, (state, action) => {
+      console.log('10 - ', action.payload);
+
       state.imageFileUrl = action.payload;
       state.isLoading = false;
       state.error = null;

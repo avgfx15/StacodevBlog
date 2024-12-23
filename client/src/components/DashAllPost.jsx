@@ -1,30 +1,59 @@
 import { useDispatch, useSelector } from 'react-redux';
-import { postsByLoggedInUserState } from '../redux/Post/PostSlice';
+import {
+  // messageState,
+  postsByLoggedInUserState,
+} from '../redux/Post/PostSlice';
 import { useEffect, useState } from 'react';
-import { postsByLoggedInUserAction } from '../redux/Post/PostActions';
+import {
+  deletePostByPostIdByAuthorAction,
+  postsByLoggedInUserAction,
+} from '../redux/Post/PostActions';
 import { currentUserState } from '../redux/User/UserSlice';
 import { Button, Table } from 'flowbite-react';
 import { Link } from 'react-router-dom';
+import ModalComponent from './ModalComponent';
 
 // # DashAllPost Component
 const DashAllPost = () => {
   const dispatch = useDispatch();
 
+  // & Declare showModalForm state
+  const [showModalForm, setShowModalForm] = useState(false);
+
+  // & Post Id
+  const [getPostId, setGetPostId] = useState(null);
+
+  // & Get CurrentUser details
+  const currentUser = useSelector(currentUserState);
+
+  // const message = useSelector(messageState);
+
+  // & Get All Post by currentUser
+  const postsByLoggedInUser = useSelector(postsByLoggedInUserState);
+  console.log(postsByLoggedInUser);
+
   // & Initially show 9 posts
   const [visiblePosts, setVisiblePosts] = useState(9);
 
-  // % Handle Show Post with every 9 count
   const handleShowMorePost = () => {
     setVisiblePosts((prev) => prev + 9); // Increase by 9 more posts
   };
 
-  // & Get Current User
-  const currentUser = useSelector(currentUserState);
+  const displayedPosts = postsByLoggedInUser
+    ? postsByLoggedInUser.slice(0, visiblePosts)
+    : [];
 
-  // & Get All Post by currentUser
-  const postsByLoggedInUser = useSelector(postsByLoggedInUserState);
+  // - Delete Post
+  const handleDeletePost = async () => {
+    dispatch(
+      deletePostByPostIdByAuthorAction({
+        postId: getPostId,
+        authorId: currentUser._id,
+      })
+    );
 
-  const displayedPosts = postsByLoggedInUser.slice(0, visiblePosts);
+    setShowModalForm(false);
+  };
 
   // & Mount All Post By currentUser
   useEffect(() => {
@@ -89,7 +118,13 @@ const DashAllPost = () => {
                     </Link>
                   </Table.Cell>
                   <Table.Cell>
-                    <span className='font-medium text-red-600 hover:underline cursor-pointer'>
+                    <span
+                      className='font-medium text-red-600 hover:underline cursor-pointer'
+                      onClick={() => {
+                        setShowModalForm(true);
+                        setGetPostId(post._id);
+                      }}
+                    >
                       Delete
                     </span>
                   </Table.Cell>
@@ -109,6 +144,13 @@ const DashAllPost = () => {
       ) : (
         <h3>There is No Post By You.</h3>
       )}
+      <ModalComponent
+        showModalForm={showModalForm}
+        setShowModalForm={setShowModalForm}
+        message='Are you sure you want to delete your Post ?'
+        handleDeletePost={handleDeletePost}
+        actionType='post'
+      />
     </div>
   );
 };

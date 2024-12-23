@@ -3,6 +3,7 @@ import { verifyAuthUserMiddleware } from '../MIDDLEWARE/verifyAuthUser.js';
 import {
   createNewPostController,
   getAllPostController,
+  deletePostController,
 } from '../CONTROLLERS/postControllers.js';
 
 const postRouter = express.Router();
@@ -15,6 +16,13 @@ postRouter.post(
   '/createnewpost',
   verifyAuthUserMiddleware,
   createNewPostController
+);
+
+// - Delete Post By User
+postRouter.delete(
+  '/deletepost/:postId/:userId',
+  verifyAuthUserMiddleware,
+  deletePostController
 );
 
 export default postRouter;
