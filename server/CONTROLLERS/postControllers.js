@@ -50,7 +50,7 @@ export const getAllPostController = async (req, res, next) => {
 
     const allPosts = await PostSchema.find({
       ...(req.query.author && { author: req.query.author }),
-      ...(req.query.id && { _id: req.query.id }),
+      ...(req.query.postId && { _id: req.query.postId }),
       ...(req.query.title && { title: req.query.title }),
       ...(req.query.slug && { slug: req.query.slug }),
       ...(req.query.category && { category: req.query.category }),
@@ -119,5 +119,76 @@ export const deletePostController = async (req, res, next) => {
     res.status(200).json({ message: 'Post deleted successfully' });
   } catch (error) {
     return next(errorHandler(500, 'Failed to delete Post'));
+  }
+};
+
+// / Get Post By author by postId
+
+export const getPostByPostIdController = async (req, res, next) => {
+  try {
+    const postId = req.params.postId;
+
+    // & Find Post by id
+    const post = await PostSchema.findById(postId);
+
+    // & If no post found
+    if (!post) {
+      return next(errorHandler(404, 'Post not found'));
+    }
+    res.status(200).json(post);
+  } catch (error) {
+    return next(errorHandler(500, 'Failed to Get Post'));
+  }
+};
+
+// * Update Post By author by postId
+export const updatePostController = async (req, res, next) => {
+  console.log('Update Post');
+
+  try {
+    // & get from token
+    const loggedInUser = req.user;
+    console.log(loggedInUser);
+
+    // & get from params
+    const postId = req.params.postId;
+    const userId = req.params.userId;
+    console.log(postId);
+    console.log(userId);
+
+    // & check loggedInUser isAdmin and req.params.id, requested user are same
+    if (!loggedInUser.isAdmin || loggedInUser.id !== userId) {
+      return next(
+        errorHandler(403, 'You are not authorized to update the Post')
+      );
+    }
+
+    const { title, content, category } = req.body;
+
+    const slug = title
+      .split(' ')
+      .join('-')
+      .toLowerCase()
+      .replace(/[^a-zA-Z0-9-]/g, '-');
+    // & Update Post
+    const updatePost = await PostSchema.findByIdAndUpdate(
+      postId,
+      {
+        $set: {
+          title,
+          slug,
+          content,
+          category,
+          postImage: req.body.postImage,
+          author: loggedInUser.id,
+        },
+      },
+      {
+        new: true,
+      }
+    );
+    return res.status(200).json(updatePost);
+  } catch (error) {
+    return next(errorHandler(500, 'Failed to update post'));
   }
 };

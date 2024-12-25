@@ -3,7 +3,9 @@ import {
   createNewPostAction,
   deletePostByPostIdByAuthorAction,
   getAllPostsAction,
+  getPostByPostIdAction,
   postsByLoggedInUserAction,
+  updatePostByPostIdByAuthorAction,
   uploadPostImageAction,
 } from './PostActions';
 
@@ -111,16 +113,62 @@ const postSlice = createSlice({
       deletePostByPostIdByAuthorAction.fulfilled,
       (state, action) => {
         const { data, postId } = action.payload;
-        console.log(postId);
 
         state.isPostLoading = false;
         state.postError = null;
         state.message = data;
-        console.log('Posts Before Deletion:', state.postsByLoggedInUser);
+
         state.postsByLoggedInUser = state.postsByLoggedInUser.filter((post) => {
           return post._id !== postId;
         });
         console.log('Posts After Deletion:', state.postsByLoggedInUser);
+      }
+    );
+
+    // & Get Post By PostId
+    builder.addCase(getPostByPostIdAction.pending, (state) => {
+      state.isPostLoading = true;
+      state.postError = null;
+      state.currentPost = null;
+    });
+
+    // / Get Post By PostId
+    builder.addCase(getPostByPostIdAction.fulfilled, (state, action) => {
+      state.isPostLoading = false;
+      state.currentPost = action.payload;
+      state.postError = null;
+    });
+
+    // ! Get Post By PostId
+    builder.addCase(getPostByPostIdAction.rejected, (state, action) => {
+      state.isPostLoading = false;
+      state.postError = action.payload;
+    });
+
+    // * Update Post
+    // & Update Post pending
+    builder.addCase(updatePostByPostIdByAuthorAction.pending, (state) => {
+      state.isPostLoading = true;
+      state.postError = null;
+      state.message = null;
+    });
+    // * Update Post
+    // / Update Post fulfilled
+    builder.addCase(
+      updatePostByPostIdByAuthorAction.fulfilled,
+      (state, action) => {
+        state.currentPost = action.payload;
+        state.isPostLoading = false;
+        state.postError = null;
+      }
+    );
+
+    // ! Update Post rejected
+    builder.addCase(
+      updatePostByPostIdByAuthorAction.rejected,
+      (state, action) => {
+        state.isPostLoading = false;
+        state.postError = action.payload;
       }
     );
   },

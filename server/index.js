@@ -31,6 +31,7 @@ app.get('/', (req, res) => res.send('Hello World!'));
 
 // & Middleware
 app.use(express.json());
+
 app.use(express.urlencoded({ extended: true })); // For parsing application/x-www-form-urlencoded
 
 // & Cors middleware

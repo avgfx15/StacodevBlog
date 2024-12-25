@@ -54,8 +54,6 @@ const DashProfile = () => {
   const successMsg = useSelector(successMsgState);
   const errorMsg = useSelector(errorMsgState);
 
-  console.log(currentUser.profilePic);
-
   // $ Handle change profilePic
   const handleProfilePicChange = (e) => {
     const file = e.target.files[0];

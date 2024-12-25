@@ -4,6 +4,8 @@ import {
   createNewPostController,
   getAllPostController,
   deletePostController,
+  updatePostController,
+  getPostByPostIdController,
 } from '../CONTROLLERS/postControllers.js';
 
 const postRouter = express.Router();
@@ -23,6 +25,16 @@ postRouter.delete(
   '/deletepost/:postId/:userId',
   verifyAuthUserMiddleware,
   deletePostController
+);
+
+// / Get Post By Id
+postRouter.get('/getpost/:postId', getPostByPostIdController);
+
+// * Update Post By author by postId
+postRouter.put(
+  '/updatepost/:postId/:userId',
+  verifyAuthUserMiddleware,
+  updatePostController
 );
 
 export default postRouter;

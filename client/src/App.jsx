@@ -18,6 +18,7 @@ import { useEffect } from 'react';
 import AdminPrivateRoute from './components/AdminPrivateRoute';
 import CreateNewPost from './pages/CreateNewPost';
 import { getAllPostsAction } from './redux/Post/PostActions';
+import UpdatePost from './pages/UpdatePost';
 
 // # Main App Component
 const App = () => {
@@ -51,6 +52,7 @@ const App = () => {
         </Route>
         <Route element={<AdminPrivateRoute />}>
           <Route path='/createnewpost' element={<CreateNewPost />} />
+          <Route path='/updatepost/:postId' element={<UpdatePost />} />
         </Route>
         <Route path='/projects' element={<Projects />} />
         <Route path='/signup' element={<SignUp />} />

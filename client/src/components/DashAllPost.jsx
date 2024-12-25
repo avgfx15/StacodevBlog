@@ -111,7 +111,7 @@ const DashAllPost = () => {
                   <Table.Cell>{post.category}</Table.Cell>
                   <Table.Cell>
                     <Link
-                      to={`'/updatepost/${post._id}`}
+                      to={`/updatepost/${post._id}`}
                       className='text-teal-500'
                     >
                       <span className='hover:underline'>Edit</span>

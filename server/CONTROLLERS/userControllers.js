@@ -127,3 +127,18 @@ export const signOutUserController = async (req, res, next) => {
     return next(errorHandler(500, 'Failed to Sign Out User'));
   }
 };
+
+// / Get All Users By Admin
+export const getAllUsersByAdminController = async (req, res, next) => {
+  const loggedInUser = req.user;
+
+  try {
+    if (!loggedInUser.isAdmin) {
+      return next(errorHandler(403, 'You are not authorized'));
+    }
+    const users = await UserSchema.find().select('-password');
+    return res.status(200).json(users);
+  } catch (error) {
+    return next(errorHandler(500, 'Failed to get allUsers'));
+  }
+};

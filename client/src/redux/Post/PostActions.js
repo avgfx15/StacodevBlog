@@ -7,14 +7,11 @@ export const uploadPostImageAction = createAsyncThunk(
   'uploadPostImageAction',
   async (formData) => {
     try {
-      console.log('Uplaod Post Image');
-
       const response = await fetch(baseUrl + 'upload', {
         method: 'POST',
         body: formData,
       });
       const data = await response.json();
-      console.log(data);
 
       // % Handle Error
       if (data.success === false) {
@@ -33,7 +30,6 @@ export const uploadPostImageAction = createAsyncThunk(
 export const createNewPostAction = createAsyncThunk(
   'createNewPostAction',
   async (newPostData) => {
-    console.log(newPostData);
     try {
       const response = await fetch('api/posts/createnewpost', {
         method: 'POST',
@@ -49,11 +45,10 @@ export const createNewPostAction = createAsyncThunk(
       }
       if (response.ok) {
         console.log('New Post Created');
-        console.log(data);
+
         return data;
       }
     } catch (error) {
-      console.log(error.message);
       return error.message;
     }
   }
@@ -78,7 +73,6 @@ export const getAllPostsAction = createAsyncThunk(
         return data.AllPost;
       }
     } catch (error) {
-      console.log(error.message);
       return error.message;
     }
   }
@@ -106,7 +100,6 @@ export const postsByLoggedInUserAction = createAsyncThunk(
         return data.AllPost;
       }
     } catch (error) {
-      console.log(error.message);
       return error.message;
     }
   }
@@ -133,6 +126,66 @@ export const deletePostByPostIdByAuthorAction = createAsyncThunk(
       }
       if (response.ok) {
         return { data, postId };
+      }
+    } catch (error) {
+      return error.message;
+    }
+  }
+);
+
+// / Get Post By postId
+
+export const getPostByPostIdAction = createAsyncThunk(
+  'getPostByPostId',
+  async (postId) => {
+    try {
+      const response = await fetch(`/api/posts/getpost/${postId}`, {
+        method: 'GET',
+      });
+      const data = await response.json();
+
+      // % Handle Error
+      if (data.success === false) {
+        return data.message;
+      }
+      // % Check if response is OK
+      if (response.ok) {
+        return data;
+      }
+    } catch (error) {
+      return error.message;
+    }
+  }
+);
+
+// * Update Post By postId and author
+
+export const updatePostByPostIdByAuthorAction = createAsyncThunk(
+  'updatePostByPostIdByAuthor',
+  async ({ postId, userId, updatedData }) => {
+    console.log(postId);
+    console.log(userId);
+    console.log(updatedData);
+
+    try {
+      const response = await fetch(
+        `/api/posts/updatepost/${postId}/${userId}`,
+        {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(updatedData),
+        }
+      );
+      const data = await response.json();
+      // % Handle Error
+      if (data.success === false) {
+        return data.message;
+      }
+      if (response.ok) {
+        console.log('New Post Created');
+        return data;
       }
     } catch (error) {
       return error.message;
