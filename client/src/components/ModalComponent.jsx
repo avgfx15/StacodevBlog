@@ -11,14 +11,20 @@ const ModalComponent = ({
   setShowModalForm,
   message,
   actionType,
+  userType,
   handleDeletePost,
   handleToDeleteUser,
+  handleToDeleteUserByAdmin,
 }) => {
   const handleConfirmDelete = async () => {
     if (actionType === 'user') {
       // Call the delete user function
       console.log('Deleting user...');
-      handleToDeleteUser();
+      if (userType === 'admin') {
+        handleToDeleteUserByAdmin();
+      } else {
+        handleToDeleteUser();
+      }
     } else if (actionType === 'post') {
       // Call the delete post function
       console.log('Deleting post...');
@@ -66,7 +72,9 @@ ModalComponent.propTypes = {
   message: PropTypes.string.isRequired,
   handleDeletePost: PropTypes.func,
   handleToDeleteUser: PropTypes.func,
+  handleToDeleteUserByAdmin: PropTypes.func,
   actionType: PropTypes.string.isRequired,
+  userType: PropTypes.string.isRequired,
 };
 
 export default ModalComponent;

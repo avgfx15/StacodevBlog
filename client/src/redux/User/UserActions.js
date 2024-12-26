@@ -169,6 +169,7 @@ export const signOutUserAction = createAsyncThunk('signoutUser', async () => {
   }
 });
 
+// / Get All Users By Admin
 export const getAllUsersByAdminAction = createAsyncThunk(
   'getAllUsers',
   async () => {
@@ -183,6 +184,28 @@ export const getAllUsersByAdminAction = createAsyncThunk(
       } else {
         return data;
       }
+    } catch (error) {
+      return error.message;
+    }
+  }
+);
+
+// - Delete User By admin
+export const deleteUserByAdminAction = createAsyncThunk(
+  'deleteUserByAdmin',
+  async (id) => {
+    console.log(id);
+
+    try {
+      const response = await fetch(`/api/user/deleteuserbyadmin/${id}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ id: id }),
+      });
+      const data = response.json();
+      return { data, id };
     } catch (error) {
       return error.message;
     }

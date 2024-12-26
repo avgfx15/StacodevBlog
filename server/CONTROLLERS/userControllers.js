@@ -135,8 +135,6 @@ export const signOutUserController = async (req, res, next) => {
 
 // / Get All Users By Admin
 export const getAllUsersByAdminController = async (req, res, next) => {
-  console.log('GeT All Users By Admin');
-
   const loggedInUser = req.user;
 
   try {
@@ -147,5 +145,22 @@ export const getAllUsersByAdminController = async (req, res, next) => {
     return res.status(200).json(users);
   } catch (error) {
     return next(errorHandler(500, 'Failed to get allUsers'));
+  }
+};
+
+// - Delete user By admin
+export const deleteUserByAdminController = async (req, res, next) => {
+  const loggedInUser = req.user;
+  if (!loggedInUser.isAdmin) {
+    return next(errorHandler(403, 'You are not authorized'));
+  } else {
+    const userId = req.params.userId;
+    try {
+      // - Delete User
+      await UserSchema.findByIdAndDelete(userId);
+      return res.status(200).json('User Deleted Successfully');
+    } catch (error) {
+      return next(errorHandler(500, 'Failed to delete user'));
+    }
   }
 };

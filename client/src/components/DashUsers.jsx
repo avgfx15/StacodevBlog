@@ -1,14 +1,16 @@
 import { useDispatch, useSelector } from 'react-redux';
 
 import { useEffect, useState } from 'react';
-import { deletePostByPostIdByAuthorAction } from '../redux/Post/PostActions';
+
 import { allUsersState, currentUserState } from '../redux/User/UserSlice';
 import { Button, Table } from 'flowbite-react';
 import { Link } from 'react-router-dom';
 import ModalComponent from './ModalComponent';
-import { getAllUsersByAdminAction } from '../redux/User/UserActions';
-import { FaTimes } from 'react-icons/fa';
-import { FaCheck } from 'react-icons/fa';
+import {
+  deleteUserByAdminAction,
+  getAllUsersByAdminAction,
+} from '../redux/User/UserActions';
+import { FaTimes, FaCheck } from 'react-icons/fa';
 
 // # DashAllPost Component
 const DashUsers = () => {
@@ -18,7 +20,7 @@ const DashUsers = () => {
   const [showModalForm, setShowModalForm] = useState(false);
 
   // & Post Id
-  const [getPostId, setGetPostId] = useState(null);
+  const [getUser, setGetUser] = useState(null);
 
   // & Get CurrentUser details
   const currentUser = useSelector(currentUserState);
@@ -27,6 +29,7 @@ const DashUsers = () => {
 
   // & Get All Post by currentUser
   const allUsers = useSelector(allUsersState);
+  console.log(allUsers);
 
   // & Initially show 9 posts
   const [visibleUsers, setVisibleUsers] = useState(9);
@@ -38,13 +41,9 @@ const DashUsers = () => {
   const displayedUsers = allUsers ? allUsers.slice(0, visibleUsers) : [];
 
   // - Delete Post
-  const handleDeletePost = async () => {
-    dispatch(
-      deletePostByPostIdByAuthorAction({
-        postId: getPostId,
-        authorId: currentUser._id,
-      })
-    );
+  const handleToDeleteUserByAdmin = async () => {
+    dispatch(deleteUserByAdminAction(getUser._id));
+    dispatch(getAllUsersByAdminAction());
 
     setShowModalForm(false);
   };
@@ -113,25 +112,20 @@ const DashUsers = () => {
                     </Link>
                   </Table.Cell>
                   <Table.Cell>
-                    <Link
-                      to={`/updatepost/${user._id}`}
-                      className='text-teal-500'
-                    >
-                      <span className='hover:underline text-center'>
-                        {user.isAdmin === false ? (
-                          <FaTimes className='text-2xl text-red-700' />
-                        ) : (
-                          <FaCheck className='text-green-500 text-2xl' />
-                        )}
-                      </span>
-                    </Link>
+                    <span className='hover:underline text-center'>
+                      {user.isAdmin === false ? (
+                        <FaTimes className='text-2xl text-red-700' />
+                      ) : (
+                        <FaCheck className='text-green-500 text-2xl' />
+                      )}
+                    </span>
                   </Table.Cell>
                   <Table.Cell>
                     <span
                       className='font-medium text-red-600 hover:underline cursor-pointer'
                       onClick={() => {
                         setShowModalForm(true);
-                        setGetPostId(user._id);
+                        setGetUser(user);
                       }}
                     >
                       Delete
@@ -156,9 +150,10 @@ const DashUsers = () => {
       <ModalComponent
         showModalForm={showModalForm}
         setShowModalForm={setShowModalForm}
-        message='Are you sure you want to delete your Post ?'
-        handleDeletePost={handleDeletePost}
-        actionType='post'
+        message='Are you sure you want to delete User ?'
+        handleToDeleteUserByAdmin={handleToDeleteUserByAdmin}
+        actionType='user'
+        userType='admin'
       />
     </div>
   );

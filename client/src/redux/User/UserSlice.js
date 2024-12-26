@@ -1,6 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import {
   deleteUserAction,
+  deleteUserByAdminAction,
   getAllUsersByAdminAction,
   newUserRegisterAction,
   registerWithGoogleAction,
@@ -245,6 +246,33 @@ const userSlice = createSlice({
       state.isLoading = false;
       state.error = null;
       state.allUsers = action.payload;
+    });
+
+    // - Delete User By admin
+    // & Delete User By Admin pending
+    builder.addCase(deleteUserByAdminAction.pending, (state) => {
+      state.isLoading = true;
+      state.error = null;
+      state.successStatus = false;
+      state.successMsg = null;
+      state.errorMsg = null;
+    });
+    // ! Delete User By Admin Reject
+    builder.addCase(deleteUserByAdminAction.rejected, (state, action) => {
+      state.isLoading = false;
+      state.error = action.payload.data;
+      state.successMsg = null;
+      state.errorMsg = action.payload.data;
+    });
+    // $ Delete User By Admin Success
+    builder.addCase(deleteUserByAdminAction.fulfilled, (state, action) => {
+      state.successMsg = action.payload.message;
+      state.isLoading = false;
+      state.error = null;
+      state.errorMsg = null;
+      state.allUsers = state.allUsers.filter((user) => {
+        return user.id !== action.payload.id;
+      });
     });
   },
 });

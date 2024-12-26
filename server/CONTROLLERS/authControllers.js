@@ -10,7 +10,6 @@ export const signUpController = async (req, res, next) => {
   try {
     // $ Descructure req.body
     const { username, email, mobile, password } = req.body;
-    console.log(req.body);
 
     // $ Check all Field data filled otherwise send message
     if (
@@ -42,7 +41,9 @@ export const signUpController = async (req, res, next) => {
       mobile,
       password: hashPassword,
     });
-
+    if (!newUser) {
+      return next(errorHandler(401, 'Error to create New User'));
+    }
     // $  Save newUser to database
     await newUser.save();
 
