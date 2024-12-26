@@ -80,11 +80,16 @@ export const updateUserController = async (req, res, next) => {
       },
       { new: true }
     );
+    console.log(updatedUser);
 
-    const { password, ...rest } = updatedUser._doc;
+    if (!updatedUser) {
+      return next(errorHandler(401, 'Error to update User Profile'));
+    } else {
+      const { password, ...rest } = updatedUser._doc;
 
-    // & Return updated user
-    return res.status(200).json(rest);
+      // & Return updated user
+      return res.status(200).json(rest);
+    }
   } catch (error) {
     return next(errorHandler(500, 'Failed to update user'));
   }
@@ -130,6 +135,8 @@ export const signOutUserController = async (req, res, next) => {
 
 // / Get All Users By Admin
 export const getAllUsersByAdminController = async (req, res, next) => {
+  console.log('GeT All Users By Admin');
+
   const loggedInUser = req.user;
 
   try {

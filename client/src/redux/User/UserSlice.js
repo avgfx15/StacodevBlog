@@ -1,6 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import {
   deleteUserAction,
+  getAllUsersByAdminAction,
   newUserRegisterAction,
   registerWithGoogleAction,
   signInUserAction,
@@ -222,10 +223,35 @@ const userSlice = createSlice({
       state.error = null;
       state.successMsg = action.payload.message;
     });
+
+    // / Get all users by admin
+    // & Get All Users pending
+    builder.addCase(getAllUsersByAdminAction.pending, (state) => {
+      state.isLoading = true;
+      state.error = null;
+      state.successStatus = false;
+      state.successMsg = null;
+      state.errorMsg = null;
+    });
+    // ! Get All Users Reject
+    builder.addCase(getAllUsersByAdminAction.rejected, (state, action) => {
+      state.isLoading = false;
+      state.error = action.payload;
+      state.successStatus = false;
+      state.errorMsg = action.payload;
+    });
+    // $ Get All Users Success
+    builder.addCase(getAllUsersByAdminAction.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.error = null;
+      state.allUsers = action.payload;
+    });
   },
 });
 
 export const userReducer = userSlice.reducer;
+
+export const allUsersState = (state) => state.userReducer.allUsers;
 
 export const currentUserState = (state) => state.userReducer.currentUser;
 

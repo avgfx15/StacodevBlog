@@ -46,10 +46,8 @@ export const registerWithGoogleAction = createAsyncThunk(
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
-      console.log(response);
 
       const data = await response.json();
-      console.log(data);
 
       if (response.ok) {
         return data;
@@ -100,7 +98,6 @@ export const uploadProfilePicAction = createAsyncThunk(
         return data.message;
       }
       if (response.ok) {
-        console.log('9 - ', data);
         return data;
       }
     } catch (error) {
@@ -113,8 +110,6 @@ export const uploadProfilePicAction = createAsyncThunk(
 export const updateUserAction = createAsyncThunk(
   'updateUser',
   async ({ inputData, currentUser }) => {
-    console.log(inputData);
-
     try {
       if (Object.keys(inputData).length === 0) {
         return;
@@ -132,8 +127,6 @@ export const updateUserAction = createAsyncThunk(
       if (!response.ok) {
         return data.message;
       } else {
-        console.log(data);
-
         return data;
       }
     } catch (error) {
@@ -175,3 +168,23 @@ export const signOutUserAction = createAsyncThunk('signoutUser', async () => {
     return error.message;
   }
 });
+
+export const getAllUsersByAdminAction = createAsyncThunk(
+  'getAllUsers',
+  async () => {
+    try {
+      const response = await fetch('/api/user/getallusers', {
+        method: 'GET',
+      });
+      const data = response.json();
+
+      if (!response.ok) {
+        return data.message;
+      } else {
+        return data;
+      }
+    } catch (error) {
+      return error.message;
+    }
+  }
+);

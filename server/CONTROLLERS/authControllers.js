@@ -10,6 +10,7 @@ export const signUpController = async (req, res, next) => {
   try {
     // $ Descructure req.body
     const { username, email, mobile, password } = req.body;
+    console.log(req.body);
 
     // $ Check all Field data filled otherwise send message
     if (

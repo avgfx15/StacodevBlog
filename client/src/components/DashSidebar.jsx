@@ -49,7 +49,19 @@ const DashSidebar = () => {
                 labelColor='dark'
                 as='div'
               >
-                Post
+                Posts
+              </Sidebar.Item>
+            </Link>
+          )}
+          {currentUser.isAdmin && (
+            <Link to='/dashboard?tab=users'>
+              <Sidebar.Item
+                active={tab === 'users'}
+                icon={HiDocumentText}
+                labelColor='dark'
+                as='div'
+              >
+                Users
               </Sidebar.Item>
             </Link>
           )}
