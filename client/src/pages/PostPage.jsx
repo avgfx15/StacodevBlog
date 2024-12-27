@@ -6,6 +6,7 @@ import { currentPostState, isPostLoadingState } from '../redux/Post/PostSlice';
 import { Button, Spinner } from 'flowbite-react';
 
 import 'react-quill/dist/quill.snow.css';
+import CallToAction from '../components/CallToAction';
 
 const PostPage = () => {
   const dispatch = useDispatch();
@@ -54,6 +55,9 @@ const PostPage = () => {
         className='p-3 max-w-2xl mx-auto w-full postContent'
         dangerouslySetInnerHTML={{ __html: currentPost.content }}
       ></div>
+      <div className='max-w-4xl mx-auto w-full'>
+        <CallToAction />
+      </div>
     </main>
   );
 };
