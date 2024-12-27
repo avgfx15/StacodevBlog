@@ -19,6 +19,7 @@ import AdminPrivateRoute from './components/AdminPrivateRoute';
 import CreateNewPost from './pages/CreateNewPost';
 import { getAllPostsAction } from './redux/Post/PostActions';
 import UpdatePost from './pages/UpdatePost';
+import PostPage from './pages/PostPage';
 
 // # Main App Component
 const App = () => {
@@ -55,6 +56,7 @@ const App = () => {
           <Route path='/updatepost/:postId' element={<UpdatePost />} />
         </Route>
         <Route path='/projects' element={<Projects />} />
+        <Route path='/posts/:postslug' element={<PostPage />} />
         <Route path='/signup' element={<SignUp />} />
         <Route path='/signin' element={<SignIn />} />
       </Routes>

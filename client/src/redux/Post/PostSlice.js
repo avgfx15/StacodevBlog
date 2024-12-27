@@ -4,6 +4,7 @@ import {
   deletePostByPostIdByAuthorAction,
   getAllPostsAction,
   getPostByPostIdAction,
+  getPostByPostSlugAction,
   postsByLoggedInUserAction,
   updatePostByPostIdByAuthorAction,
   uploadPostImageAction,
@@ -25,6 +26,8 @@ const postSlice = createSlice({
   initialState,
   reducers: {},
   extraReducers: (builder) => {
+    // @ Upload postImage
+
     // & Upload ProfilePic Pending
     builder.addCase(uploadPostImageAction.pending, (state) => {
       state.isPostLoading = true;
@@ -33,6 +36,7 @@ const postSlice = createSlice({
       state.successStatus = false;
       state.postError = null;
     });
+
     // ! Upload ProfilePic rejected
     builder.addCase(uploadPostImageAction.rejected, (state, action) => {
       state.isPostLoading = false;
@@ -50,11 +54,15 @@ const postSlice = createSlice({
       state.successStatus = true;
       state.postError = null;
     });
+
+    // @ Create New Post
+
     // & create New Post Pending
     builder.addCase(createNewPostAction.pending, (state) => {
       state.isPostLoading = true;
       state.postError = null;
     });
+
     // + create New Post fulfilled
     builder.addCase(createNewPostAction.fulfilled, (state, action) => {
       state.isPostLoading = false;
@@ -62,52 +70,67 @@ const postSlice = createSlice({
       state.postError = action.payload;
       state.postImageUrl = null;
     });
+
     // ! Get All Post Rejected
     builder.addCase(createNewPostAction.rejected, (state, action) => {
       state.isPostLoading = false;
       state.postError = action.payload;
     });
+
+    // @ Get All Post
+
     // & Get All Posts Pending
     builder.addCase(getAllPostsAction.pending, (state) => {
       state.isPostLoading = true;
       state.allPost = [];
       state.postError = null;
     });
+
     // / Get All Posts
     builder.addCase(getAllPostsAction.fulfilled, (state, action) => {
       state.isPostLoading = false;
       state.allPost = action.payload;
       state.postError = null;
     });
+
     // ! Get All Post Rejected
     builder.addCase(getAllPostsAction.rejected, (state, action) => {
       state.isPostLoading = false;
       state.postError = action.payload;
       state.post = [];
     });
+
+    // @ allPostByLoggedInUser As author
+
     // & Get All Posts By LoggedInUser Pending
     builder.addCase(postsByLoggedInUserAction.pending, (state) => {
       state.isPostLoading = true;
       state.postsByLoggedInUser = [];
       state.postError = null;
     });
+
     // / Get All Posts By LoggedInUser
     builder.addCase(postsByLoggedInUserAction.fulfilled, (state, action) => {
       state.isPostLoading = false;
       state.postsByLoggedInUser = action.payload;
       state.postError = null;
     });
+
     // ! Get All Post By LoggedInUser Rejected
     builder.addCase(postsByLoggedInUserAction.rejected, (state, action) => {
       state.isPostLoading = false;
       state.postError = action.payload;
       state.postsByLoggedInUser = [];
     });
+
+    // @ Delete Post By author
+
     // & Delete Post By author pending
     builder.addCase(deletePostByPostIdByAuthorAction.pending, (state) => {
       state.isPostLoading = true;
       state.postError = null;
     });
+
     // - Delete Post By author
     builder.addCase(
       deletePostByPostIdByAuthorAction.fulfilled,
@@ -124,6 +147,17 @@ const postSlice = createSlice({
         console.log('Posts After Deletion:', state.postsByLoggedInUser);
       }
     );
+
+    // ! Delete Post By author rejected
+    builder.addCase(
+      deletePostByPostIdByAuthorAction.rejected,
+      (state, action) => {
+        state.isPostLoading = false;
+        state.postError = action.payload;
+      }
+    );
+
+    // @ Get Post By PostId
 
     // & Get Post By PostId
     builder.addCase(getPostByPostIdAction.pending, (state) => {
@@ -145,15 +179,16 @@ const postSlice = createSlice({
       state.postError = action.payload;
     });
 
-    // * Update Post
+    // @ Update Post
+
     // & Update Post pending
     builder.addCase(updatePostByPostIdByAuthorAction.pending, (state) => {
       state.isPostLoading = true;
       state.postError = null;
       state.message = null;
     });
+
     // * Update Post
-    // / Update Post fulfilled
     builder.addCase(
       updatePostByPostIdByAuthorAction.fulfilled,
       (state, action) => {
@@ -171,6 +206,28 @@ const postSlice = createSlice({
         state.postError = action.payload;
       }
     );
+
+    // @ Get post By post Slug
+
+    // & Get Post By Post Slug Pending
+    builder.addCase(getPostByPostSlugAction.pending, (state) => {
+      state.isPostLoading = null;
+      state.postError = null;
+      state.message = null;
+    });
+
+    // / Get Post By Post Slug Fulfilled
+    builder.addCase(getPostByPostSlugAction.fulfilled, (state, action) => {
+      state.currentPost = action.payload.AllPost[0];
+      state.message = action.payload.message;
+      state.isPostLoading = false;
+      state.postError = null;
+    });
+    // ! Get Post By Post Slug Rejected
+    builder.addCase(getPostByPostSlugAction.rejected, (state, action) => {
+      state.isPostLoading = false;
+      state.postError = action.payload;
+    });
   },
 });
 

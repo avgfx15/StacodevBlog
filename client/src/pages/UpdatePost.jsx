@@ -38,8 +38,10 @@ const UpdatePost = () => {
 
   // % Handle Content Change in ReactQuill
   const handleEditorChange = (content) => {
-    setInputData(content); // Update the state with the new content
-    setInputData({ ...inputData, content });
+    setInputData((prevData) => ({
+      ...prevData,
+      content,
+    }));
   };
 
   // / Get all current State for User
@@ -91,6 +93,7 @@ const UpdatePost = () => {
         postImage:
           postImageUrl === null ? currentPost?.postImage : postImageUrl,
       };
+      console.log(inputData);
 
       dispatch(
         updatePostByPostIdByAuthorAction({

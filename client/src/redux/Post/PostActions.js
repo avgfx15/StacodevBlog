@@ -105,6 +105,30 @@ export const postsByLoggedInUserAction = createAsyncThunk(
   }
 );
 
+// / Get All Post by post Slug
+export const getPostByPostSlugAction = createAsyncThunk(
+  'getPostBypostslug',
+  async (postslug) => {
+    try {
+      const response = await fetch(`/api/posts/getallposts?slug=${postslug}`, {
+        method: 'GET',
+      });
+      const data = await response.json();
+
+      // % Handle Error
+      if (data.success === false) {
+        return data.message;
+      }
+      // % Check if response is OK
+      if (response.ok) {
+        return data;
+      }
+    } catch (error) {
+      return error.message;
+    }
+  }
+);
+
 // - Delete Post By PostId and author
 
 export const deletePostByPostIdByAuthorAction = createAsyncThunk(

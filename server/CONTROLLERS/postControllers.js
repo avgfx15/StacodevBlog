@@ -46,6 +46,8 @@ export const createNewPostController = async (req, res, next) => {
 // / Get All Post Controller
 export const getAllPostController = async (req, res, next) => {
   try {
+    console.log(req.query.slug);
+
     const sortAscending = req.query.order === 'asc' ? 1 : -1;
 
     const allPosts = await PostSchema.find({
@@ -143,18 +145,13 @@ export const getPostByPostIdController = async (req, res, next) => {
 
 // * Update Post By author by postId
 export const updatePostController = async (req, res, next) => {
-  console.log('Update Post');
-
   try {
     // & get from token
     const loggedInUser = req.user;
-    console.log(loggedInUser);
 
     // & get from params
     const postId = req.params.postId;
     const userId = req.params.userId;
-    console.log(postId);
-    console.log(userId);
 
     // & check loggedInUser isAdmin and req.params.id, requested user are same
     if (!loggedInUser.isAdmin || loggedInUser.id !== userId) {
@@ -164,12 +161,15 @@ export const updatePostController = async (req, res, next) => {
     }
 
     const { title, content, category } = req.body;
+    console.log(req.body);
 
     const slug = title
       .split(' ')
       .join('-')
       .toLowerCase()
       .replace(/[^a-zA-Z0-9-]/g, '-');
+    console.log(slug);
+
     // & Update Post
     const updatePost = await PostSchema.findByIdAndUpdate(
       postId,
@@ -187,7 +187,13 @@ export const updatePostController = async (req, res, next) => {
         new: true,
       }
     );
-    return res.status(200).json(updatePost);
+    if (!updatePost) {
+      return next(errorHandler(404, 'Error to update Post'));
+    } else {
+      console.log(updatePost);
+
+      return res.status(200).json(updatePost);
+    }
   } catch (error) {
     return next(errorHandler(500, 'Failed to update post'));
   }

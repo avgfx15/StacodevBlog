@@ -150,6 +150,7 @@ const DashAllPost = () => {
         message='Are you sure you want to delete your Post ?'
         handleDeletePost={handleDeletePost}
         actionType='post'
+        userType='user'
       />
     </div>
   );
