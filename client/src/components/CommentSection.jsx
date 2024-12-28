@@ -2,14 +2,18 @@ import { useDispatch, useSelector } from 'react-redux';
 import { currentUserState } from '../redux/User/UserSlice';
 import { Link } from 'react-router-dom';
 import { Button, Textarea } from 'flowbite-react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import {
   commentContentState,
   commentErrorState,
   commentsByPostState,
 } from '../redux/Comment/CommentSlice';
-import { createNewCommentAction } from '../redux/Comment/CommentActions';
+import {
+  createNewCommentAction,
+  getAllCommentsByPostIdAction,
+} from '../redux/Comment/CommentActions';
+import AllComments from './AllComments';
 
 const CommentSection = ({ postId }) => {
   const dispatch = useDispatch();
@@ -33,6 +37,10 @@ const CommentSection = ({ postId }) => {
 
     dispatch(createNewCommentAction(newComment));
   };
+
+  useEffect(() => {
+    dispatch(getAllCommentsByPostIdAction(postId));
+  }, [dispatch, postId]);
 
   return (
     <div className=''>
@@ -66,6 +74,11 @@ const CommentSection = ({ postId }) => {
               </div>
             </form>
           </div>
+          {commentsByPost.length === 0 ? (
+            <p className='text-sm my-5'>Still no comments for this post</p>
+          ) : (
+            <AllComments />
+          )}
         </div>
       ) : (
         <div className='my-5 flex gap-2 items-center'>

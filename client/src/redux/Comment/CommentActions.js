@@ -23,3 +23,28 @@ export const createNewCommentAction = createAsyncThunk(
     }
   }
 );
+
+// / Get All Comment By PostId
+
+export const getAllCommentsByPostIdAction = createAsyncThunk(
+  'getAllCommentsByPostId',
+  async (postId) => {
+    try {
+      const response = await fetch(
+        `/api/comments/allcommentsbypost/${postId}`,
+        {
+          method: 'GET',
+        }
+      );
+      const data = await response.json();
+
+      if (data.successStatus === false) {
+        return data.message;
+      } else {
+        return data;
+      }
+    } catch (error) {
+      return error.message;
+    }
+  }
+);

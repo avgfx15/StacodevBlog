@@ -1,5 +1,8 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { createNewCommentAction } from './CommentActions';
+import {
+  createNewCommentAction,
+  getAllCommentsByPostIdAction,
+} from './CommentActions';
 
 const initial_State = {
   commentContent: null,
@@ -39,6 +42,30 @@ const commentSlice = createSlice({
       state.commentError = action.payload.message;
       state.commentSuccess = null;
       state.commentContent = null;
+    });
+
+    // / Get All Comments By PostId
+
+    // & Pending Get All Comments by Post Id
+    builder.addCase(getAllCommentsByPostIdAction.pending, (state) => {
+      state.isLoading = true;
+      state.commentError = null;
+      state.commentSuccess = null;
+    });
+
+    // $ Get All Comments By PostId
+    builder.addCase(getAllCommentsByPostIdAction.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.commentSuccess = action.payload.message;
+      state.commentsByPost = action.payload.allComments;
+      state.commentError = null;
+    });
+
+    // ! Reject Get All Comments By PostId
+    builder.addCase(getAllCommentsByPostIdAction.rejected, (state, action) => {
+      state.isLoading = false;
+      state.commentError = action.payload.message;
+      state.commentSuccess = null;
     });
   },
 });

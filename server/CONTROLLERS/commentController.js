@@ -35,7 +35,9 @@ export const getAllCommentsByPostIdController = async (req, res, next) => {
   console.log(postId);
 
   try {
-    const getAllCommentsByPostId = await CommentSchema.find({ postId: postId });
+    const getAllCommentsByPostId = await CommentSchema.find({
+      postId: postId,
+    }).sort({ createdAt: -1 });
     if (!getAllCommentsByPostId) {
       return res.status(401).json({
         message: 'There is no comments for this post',
