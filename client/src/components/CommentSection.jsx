@@ -1,15 +1,38 @@
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { currentUserState } from '../redux/User/UserSlice';
 import { Link } from 'react-router-dom';
 import { Button, Textarea } from 'flowbite-react';
 import { useState } from 'react';
+import PropTypes from 'prop-types';
+import {
+  commentContentState,
+  commentErrorState,
+  commentsByPostState,
+} from '../redux/Comment/CommentSlice';
+import { createNewCommentAction } from '../redux/Comment/CommentActions';
 
 const CommentSection = ({ postId }) => {
+  const dispatch = useDispatch();
   const [comment, setComment] = useState('');
 
   const currentUser = useSelector(currentUserState);
 
-  const handleSubmit = async () => {};
+  const commentContent = useSelector(commentContentState);
+
+  const commentsByPost = useSelector(commentsByPostState);
+
+  const commentError = useSelector(commentErrorState);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const newComment = {
+      content: comment,
+      postId: postId,
+      userId: currentUser._id,
+    };
+
+    dispatch(createNewCommentAction(newComment));
+  };
 
   return (
     <div className=''>
@@ -37,7 +60,9 @@ const CommentSection = ({ postId }) => {
                 <p className='text-xs text-gray-500'>
                   {200 - comment.length} characters remaining
                 </p>
-                <Button gradientDuoTone='purpleToPink'>Add Your Comment</Button>
+                <Button gradientDuoTone='purpleToPink' type='submit'>
+                  Add Your Comment
+                </Button>
               </div>
             </form>
           </div>
@@ -52,6 +77,11 @@ const CommentSection = ({ postId }) => {
       )}
     </div>
   );
+};
+
+CommentSection.propTypes = {
+  // Add your methods here
+  postId: PropTypes.string.isRequired,
 };
 
 export default CommentSection;

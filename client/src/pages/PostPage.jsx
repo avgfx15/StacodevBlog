@@ -35,31 +35,31 @@ const PostPage = () => {
         {currentPost?.title}
       </h1>
       <Link
-        to={`/search?category=${currentPost.category}`}
+        to={`/search?category=${currentPost?.category}`}
         className='self-center mt-3'
       >
         <Button color='grey' pill size='xl'>
-          {currentPost.category}
+          {currentPost?.category}
         </Button>
       </Link>
       <img
-        src={`/uploads/` + currentPost.postImage}
+        src={`/uploads/` + currentPost?.postImage}
         alt='currentPost'
         className='mt-10 p-3 max-h-[600px] w-full object-cover'
       />
       <div className='flex justify-between p-3 border-b border-slate-500 mx-auto w-full max-w-2xl text-xs'>
-        <span>{new Date(currentPost.createdAt).toLocaleDateString()}</span>
-        <span>{(currentPost.content.length / 1000).toFixed(0)} mins read</span>
+        <span>{new Date(currentPost?.createdAt).toLocaleDateString()}</span>
+        <span>{(currentPost?.content.length / 1000).toFixed(0)} mins read</span>
       </div>
       <div
         className='p-3 max-w-2xl mx-auto w-full postContent'
-        dangerouslySetInnerHTML={{ __html: currentPost.content }}
+        dangerouslySetInnerHTML={{ __html: currentPost?.content }}
       ></div>
       <div className='max-w-4xl mx-auto w-full'>
         <CallToAction />
       </div>
       <div className='max-w-4xl mx-auto w-full'>
-        <CommentSection postId={currentPost._id} />
+        <CommentSection postId={currentPost?._id} />
       </div>
     </main>
   );
