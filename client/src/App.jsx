@@ -20,6 +20,7 @@ import CreateNewPost from './pages/CreateNewPost';
 import { getAllPostsAction } from './redux/Post/PostActions';
 import UpdatePost from './pages/UpdatePost';
 import PostPage from './pages/PostPage';
+import ScrollToTop from './components/ScrollToTop';
 
 // # Main App Component
 const App = () => {
@@ -44,6 +45,7 @@ const App = () => {
   // # Return Func
   return (
     <BrowserRouter>
+      <ScrollToTop />
       <Header />
       <Routes>
         <Route path='/' element={<Home />} />

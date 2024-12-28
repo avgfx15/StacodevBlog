@@ -242,6 +242,7 @@ const DashProfile = () => {
         setShowModalForm={setShowModalForm}
         message='Are you sure you want to delete your account ?'
         actionType='user'
+        userType='user'
         handleToDeleteUser={handleToDeleteUser}
       />
     </div>

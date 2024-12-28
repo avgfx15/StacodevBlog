@@ -7,13 +7,13 @@ import { Button, Spinner } from 'flowbite-react';
 
 import 'react-quill/dist/quill.snow.css';
 import CallToAction from '../components/CallToAction';
+import CommentSection from '../components/CommentSection';
 
 const PostPage = () => {
   const dispatch = useDispatch();
   const { postslug } = useParams();
 
   const currentPost = useSelector(currentPostState);
-  console.log(currentPost.content);
 
   const isPostLoading = useSelector(isPostLoadingState);
 
@@ -57,6 +57,9 @@ const PostPage = () => {
       ></div>
       <div className='max-w-4xl mx-auto w-full'>
         <CallToAction />
+      </div>
+      <div className='max-w-4xl mx-auto w-full'>
+        <CommentSection postId={currentPost._id} />
       </div>
     </main>
   );
