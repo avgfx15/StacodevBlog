@@ -29,3 +29,26 @@ export const createCommentController = async (req, res, next) => {
     return next(errorHandler(500, 'Error to saved Comment'));
   }
 };
+
+export const getAllCommentsByPostIdController = async (req, res, next) => {
+  const postId = req.params.postId;
+  console.log(postId);
+
+  try {
+    const getAllCommentsByPostId = await CommentSchema.find({ postId: postId });
+    if (!getAllCommentsByPostId) {
+      return res.status(401).json({
+        message: 'There is no comments for this post',
+        successStatus: false,
+      });
+    } else {
+      return res.status(200).json({
+        message: 'All Comments for this post.',
+        successStatus: true,
+        allComments: getAllCommentsByPostId,
+      });
+    }
+  } catch (error) {
+    return next(errorHandler(500, 'Error to get all comments byPostId'));
+  }
+};
