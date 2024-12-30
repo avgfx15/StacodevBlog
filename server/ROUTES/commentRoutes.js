@@ -3,6 +3,7 @@ import {
   createCommentController,
   // getAllCommentedUserIdsByPostIdController,
   getAllCommentsByPostIdController,
+  likeUnLikeCommentController,
 } from '../CONTROLLERS/commentController.js';
 import { verifyAuthUserMiddleware } from '../MIDDLEWARE/verifyAuthUser.js';
 
@@ -17,6 +18,12 @@ commentRouter.post(
 commentRouter.get(
   '/allcommentsbypost/:postId',
   getAllCommentsByPostIdController
+);
+
+commentRouter.put(
+  '/likecomment/:commentId',
+  verifyAuthUserMiddleware,
+  likeUnLikeCommentController
 );
 
 export default commentRouter;

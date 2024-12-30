@@ -1,30 +1,34 @@
 import { errorHandler } from '../MIDDLEWARE/errorMiddleware.js';
 import PostSchema from '../MODELS/postSchema.js';
 
+// + Create new post
 export const createNewPostController = async (req, res, next) => {
   const { title, content, category } = req.body;
   try {
+    // & get logged In user
     const loggedInUser = req.user;
-
+    // % Check loggesIn user is not admin
     if (!loggedInUser.isAdmin) {
       return next(errorHandler(400, 'You are not authorized to Create Post'));
     }
+    // % check req.body input is empty
     if (!title || !content) {
       return next(errorHandler(400, 'Please fill all required fields'));
     }
-
+    // % Check if post title already exist
     const titleMacthed = await PostSchema.findOne({ title });
 
     if (titleMacthed) {
       return next(errorHandler(400, 'Post with same title is Exist'));
     }
-
+    // & Create slug for creating post route
     const slug = title
       .split(' ')
-      .join('-')
+      .join('_')
       .toLowerCase()
       .replace(/[^a-zA-Z0-9-]/g, '-');
 
+    // % Create new post object
     const newBlog = new PostSchema({
       title,
       slug,
@@ -33,7 +37,7 @@ export const createNewPostController = async (req, res, next) => {
       postImage: req.body.postImage,
       author: loggedInUser.id,
     });
-
+    // % Save newPost in DB
     const savedPost = await newBlog.save();
     res
       .status(201)
@@ -46,10 +50,10 @@ export const createNewPostController = async (req, res, next) => {
 // / Get All Post Controller
 export const getAllPostController = async (req, res, next) => {
   try {
-    console.log(req.query.slug);
-
+    // & Create sort condition as ascending order
     const sortAscending = req.query.order === 'asc' ? 1 : -1;
 
+    // & get all post from DB with query
     const allPosts = await PostSchema.find({
       ...(req.query.author && { author: req.query.author }),
       ...(req.query.postId && { _id: req.query.postId }),
@@ -66,19 +70,23 @@ export const getAllPostController = async (req, res, next) => {
       }),
     }).sort({ updatedAt: sortAscending });
 
+    // & Get total post count
     const totalPostsCount = await PostSchema.countDocuments();
-
+    // & Calculate time from create or update to till date
+    // & Get Current Date
     const currentNow = new Date();
 
+    // & Get time more then 1 month
     const oneMonthAgo = new Date(
       currentNow.getFullYear(),
       currentNow.getMonth() - 1,
       currentNow.getDate()
     );
-
+    // & Get Last month post count
     const lastMonthPosts = await PostSchema.countDocuments({
       updatedAt: { $gte: oneMonthAgo },
     });
+
     res.status(201).json({
       message: 'Post created successfully',
       AllPost: allPosts,
@@ -94,7 +102,10 @@ export const getAllPostController = async (req, res, next) => {
 
 export const deletePostController = async (req, res, next) => {
   try {
+    // & Get post from params
     const postId = req.params.postId;
+
+    // & Get LoggedIn user
     const user = req.user;
 
     // & Check if loggedInUser is Admin
@@ -116,7 +127,7 @@ export const deletePostController = async (req, res, next) => {
     if (!post) {
       return next(errorHandler(404, 'Post not found'));
     }
-
+    // - Find Post and Delete
     await PostSchema.findByIdAndDelete(postId);
     res.status(200).json({ message: 'Post deleted successfully' });
   } catch (error) {
@@ -128,6 +139,7 @@ export const deletePostController = async (req, res, next) => {
 
 export const getPostByPostIdController = async (req, res, next) => {
   try {
+    // & Get Post Id by params
     const postId = req.params.postId;
 
     // & Find Post by id
@@ -137,6 +149,7 @@ export const getPostByPostIdController = async (req, res, next) => {
     if (!post) {
       return next(errorHandler(404, 'Post not found'));
     }
+
     res.status(200).json(post);
   } catch (error) {
     return next(errorHandler(500, 'Failed to Get Post'));
@@ -160,12 +173,13 @@ export const updatePostController = async (req, res, next) => {
       );
     }
 
+    // % get updated req.body input
     const { title, content, category } = req.body;
-    console.log(req.body);
 
+    // & Create new slug based on new title
     const slug = title
       .split(' ')
-      .join('-')
+      .join('_')
       .toLowerCase()
       .replace(/[^a-zA-Z0-9-]/g, '-');
     console.log(slug);
@@ -187,11 +201,11 @@ export const updatePostController = async (req, res, next) => {
         new: true,
       }
     );
+
+    // % If error to update
     if (!updatePost) {
       return next(errorHandler(404, 'Error to update Post'));
     } else {
-      console.log(updatePost);
-
       return res.status(200).json(updatePost);
     }
   } catch (error) {
