@@ -9,6 +9,7 @@ import {
   signOutUserController,
   getAllUsersByAdminController,
   deleteUserByAdminController,
+  getUserByIdController,
 } from '../CONTROLLERS/userControllers.js';
 import { verifyAuthUserMiddleware } from '../MIDDLEWARE/verifyAuthUser.js';
 
@@ -42,6 +43,9 @@ userRouter.delete(
   verifyAuthUserMiddleware,
   deleteUserByAdminController
 );
+
+// / Get User By Id
+userRouter.get('/getuser/:userId', getUserByIdController);
 
 // & Signout
 userRouter.post('/signout', signOutUserController);

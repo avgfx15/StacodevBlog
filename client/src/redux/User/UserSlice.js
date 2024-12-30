@@ -3,6 +3,7 @@ import {
   deleteUserAction,
   deleteUserByAdminAction,
   getAllUsersByAdminAction,
+  getUserByIdAction,
   newUserRegisterAction,
   registerWithGoogleAction,
   signInUserAction,
@@ -20,6 +21,7 @@ const initialState = {
   successMsg: null,
   errorMsg: null,
   imageFileUrl: null,
+  getUserData: null,
 };
 
 const userSlice = createSlice({
@@ -274,6 +276,31 @@ const userSlice = createSlice({
         return user.id !== action.payload.id;
       });
     });
+
+    // / Get User data
+    // & Get User data pending
+    builder.addCase(getUserByIdAction.pending, (state) => {
+      state.isLoading = true;
+      state.error = null;
+      state.successStatus = false;
+      state.successMsg = null;
+      state.errorMsg = null;
+    });
+
+    // $ Ge User Data Fulfilled
+    builder.addCase(getUserByIdAction.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.error = null;
+      state.getUserData = action.payload.User;
+      state.successMsg = action.payload.message;
+    });
+
+    // ! reject Get User
+    builder.addCase(getUserByIdAction.rejected, (state, action) => {
+      state.isLoading = false;
+      state.error = action.payload.message;
+      state.errorMsg = action.payload.message;
+    });
   },
 });
 
@@ -282,6 +309,8 @@ export const userReducer = userSlice.reducer;
 export const allUsersState = (state) => state.userReducer.allUsers;
 
 export const currentUserState = (state) => state.userReducer.currentUser;
+
+export const getUserState = (state) => state.userReducer.getUserData;
 
 export const isLoadingState = (state) => state.userReducer.isLoading;
 

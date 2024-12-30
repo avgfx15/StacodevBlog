@@ -211,3 +211,23 @@ export const deleteUserByAdminAction = createAsyncThunk(
     }
   }
 );
+
+// / Get User By Id
+export const getUserByIdAction = createAsyncThunk(
+  'getUserById',
+  async (userId) => {
+    try {
+      const response = await fetch(`/api/user/getuser/${userId}`, {
+        method: 'GET',
+      });
+      const data = await response.json();
+      if (data.successStatus === false) {
+        return data.message;
+      } else {
+        return data;
+      }
+    } catch (error) {
+      return error.message;
+    }
+  }
+);

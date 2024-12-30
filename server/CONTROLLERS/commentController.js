@@ -32,18 +32,22 @@ export const createCommentController = async (req, res, next) => {
 
 export const getAllCommentsByPostIdController = async (req, res, next) => {
   const postId = req.params.postId;
-  console.log(postId);
 
   try {
     const getAllCommentsByPostId = await CommentSchema.find({
       postId: postId,
-    }).sort({ createdAt: -1 });
+    })
+      .populate('userId')
+      .populate('userId', 'username profilePic')
+      .sort({ createdAt: -1 });
     if (!getAllCommentsByPostId) {
       return res.status(401).json({
         message: 'There is no comments for this post',
         successStatus: false,
       });
     } else {
+      console.log(getAllCommentsByPostId);
+
       return res.status(200).json({
         message: 'All Comments for this post.',
         successStatus: true,
@@ -51,6 +55,8 @@ export const getAllCommentsByPostIdController = async (req, res, next) => {
       });
     }
   } catch (error) {
-    return next(errorHandler(500, 'Error to get all comments byPostId'));
+    console.log(error.message);
+
+    return next(errorHandler(500, 'Error to get all comments by PostId'));
   }
 };

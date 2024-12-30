@@ -1,6 +1,7 @@
 import express from 'express';
 import {
   createCommentController,
+  // getAllCommentedUserIdsByPostIdController,
   getAllCommentsByPostIdController,
 } from '../CONTROLLERS/commentController.js';
 import { verifyAuthUserMiddleware } from '../MIDDLEWARE/verifyAuthUser.js';

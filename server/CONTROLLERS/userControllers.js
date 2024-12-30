@@ -164,3 +164,24 @@ export const deleteUserByAdminController = async (req, res, next) => {
     }
   }
 };
+
+// / Get User By userId
+export const getUserByIdController = async (req, res, next) => {
+  const userId = req.params.userId;
+  try {
+    const getUser = await UserSchema.find({ userId }).select('-password');
+    if (!getUser) {
+      return res
+        .status(401)
+        .json({ successStatus: false, message: 'Error to get userData' });
+    } else {
+      return res.status(200).json({
+        successStatus: true,
+        message: 'Get User Data.',
+        User: getUser,
+      });
+    }
+  } catch (error) {
+    return next(errorHandler(500, 'Failed to get user'));
+  }
+};

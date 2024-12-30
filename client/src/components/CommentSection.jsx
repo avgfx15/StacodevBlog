@@ -4,11 +4,7 @@ import { Link } from 'react-router-dom';
 import { Button, Textarea } from 'flowbite-react';
 import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import {
-  commentContentState,
-  commentErrorState,
-  commentsByPostState,
-} from '../redux/Comment/CommentSlice';
+import { commentsByPostState } from '../redux/Comment/CommentSlice';
 import {
   createNewCommentAction,
   getAllCommentsByPostIdAction,
@@ -21,11 +17,7 @@ const CommentSection = ({ postId }) => {
 
   const currentUser = useSelector(currentUserState);
 
-  const commentContent = useSelector(commentContentState);
-
   const commentsByPost = useSelector(commentsByPostState);
-
-  const commentError = useSelector(commentErrorState);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -74,10 +66,18 @@ const CommentSection = ({ postId }) => {
               </div>
             </form>
           </div>
-          {commentsByPost.length === 0 ? (
+          {commentsByPost?.length === 0 ? (
             <p className='text-sm my-5'>Still no comments for this post</p>
           ) : (
-            <AllComments />
+            <div>
+              <div className='flex gap-3 items-center'>
+                <h2 className='text-gray-200'>Comments</h2>
+                <div className='border border-gray-500 py-1 px-2 rounded-sm'>
+                  <p className='text-gray-400'>{commentsByPost?.length}</p>
+                </div>
+              </div>
+              <AllComments />
+            </div>
           )}
         </div>
       ) : (

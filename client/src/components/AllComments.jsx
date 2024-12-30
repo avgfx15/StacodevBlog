@@ -1,22 +1,36 @@
+import moment from 'moment';
+
 import { useSelector } from 'react-redux';
 import { commentsByPostState } from '../redux/Comment/CommentSlice';
-import { allUsersState } from '../redux/User/UserSlice';
 
 const AllComments = () => {
   const commentsByPost = useSelector(commentsByPostState);
-  const allUsers = useSelector(allUsersState);
 
   return (
     <div>
-      <div className='flex gap-3 items-center'>
-        <h2 className='text-gray-200'>Comments</h2>
-        <div className='border border-gray-500 py-1 px-2 rounded-sm'>
-          <p className='text-gray-400'>{commentsByPost.length}</p>
-        </div>
-      </div>
-      {commentsByPost.map((comment) => (
-        <div key={comment.id}>
-          <p>{comment.commentText}</p>
+      {commentsByPost?.map((comment) => (
+        <div
+          key={comment?._id}
+          className='flex p-4 items-center border-b dark:border-gray-600 text-sm'
+        >
+          <div className='flex-shrink-0 mr-3'>
+            <img
+              src={`/uploads/` + comment?.userId.profilePic}
+              alt='userProfile'
+              className='h-10 w-10 my-3 rounded-full bg-gray-200'
+            />
+          </div>
+          <div className='flex-1'>
+            <div className='flex items-center mb-1'>
+              <span className='font-bold truncate text-sm'>
+                @ {comment?.userId ? comment.userId.username : 'anonymous user'}
+              </span>
+              <span>{moment(comment.createdAt).fromNow()}</span>
+            </div>
+            <div className='fle-2'>
+              <p className='text-gray-400'>{comment?.commentText}</p>
+            </div>
+          </div>
         </div>
       ))}
     </div>
