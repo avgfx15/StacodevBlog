@@ -16,6 +16,7 @@ const AllComments = () => {
 
   // & Get all Comments by post Id
   const commentsByPost = useSelector(commentsByPostState);
+  console.log(commentsByPost);
 
   // & Get Current LoggedIn User
   const currentUser = useSelector(currentUserState);

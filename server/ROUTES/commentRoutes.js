@@ -1,6 +1,7 @@
 import express from 'express';
 import {
   createCommentController,
+  editCommentController,
   // getAllCommentedUserIdsByPostIdController,
   getAllCommentsByPostIdController,
   likeUnLikeCommentController,
@@ -24,6 +25,12 @@ commentRouter.put(
   '/likecomment/:commentId',
   verifyAuthUserMiddleware,
   likeUnLikeCommentController
+);
+
+commentRouter.put(
+  '/editcomment/:commentId',
+  verifyAuthUserMiddleware,
+  editCommentController
 );
 
 export default commentRouter;

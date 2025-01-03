@@ -110,3 +110,43 @@ export const likeUnLikeCommentController = async (req, res, next) => {
     return next(errorHandler(500, 'Failed to like or dislike comment'));
   }
 };
+
+// * Edit Or Update Comment By User By Id
+export const editCommentController = async (req, res, next) => {
+  try {
+    // & Get comment id by params
+    const commentId = req.params.commentId;
+
+    // & Get LoggedIn User
+    const loggedInUser = req.user;
+    const findComment = await CommentSchema.findById(commentId);
+    // * If no comment
+    if (!findComment) {
+      return res
+        .status(401)
+        .json({ message: 'Comment not exist', successStatus: false });
+    }
+    // & Check if user is owner of comment
+    if (findComment.userId !== loggedInUser.id && !loggedInUser.isAdmin) {
+      return res.status(401).json({
+        message: 'You are not owner of comment',
+        successStatus: false,
+      });
+    } else {
+      // & Update comment by user
+      const updatedComment = await CommentSchema.findByIdAndUpdate(
+        commentId,
+        { commentText: req.body.commentText },
+        { new: true }
+      );
+      // & Return updated comment
+      return res.status(201).json({
+        message: 'Comment updated',
+        successStatus: true,
+        comment: updatedComment,
+      });
+    }
+  } catch (error) {
+    return next(errorHandler(500, 'Failed to edit comment'));
+  }
+};
