@@ -76,7 +76,7 @@ export const likeUnLikeCommentController = async (req, res, next) => {
     const commentId = req.params.commentId;
 
     // & Find By comment Id
-    const getComment = await CommentSchema.find({ commentId: commentId });
+    const getComment = await CommentSchema.findById(commentId);
 
     // * If no comment
     if (!getComment) {
@@ -87,16 +87,17 @@ export const likeUnLikeCommentController = async (req, res, next) => {
       // & Check if user already like or unlike comment by find index of user in likes array
       const getuserIndex = getComment.likes.indexOf(loggedInUser.id);
       // % if user already like comment
-      if (getuserIndex !== -1) {
-        // & Remove user from likes array
-        getComment.likes.splice(getuserIndex, 1);
-        getComment.noOfLikes += 1;
-      } else {
+
+      if (getuserIndex === -1) {
         // & Add user to likes array
         getComment.likes.push(loggedInUser.id);
+        getComment.noOfLikes += 1;
+      } else {
+        // & Remove user from likes array
+        getComment.likes.splice(getuserIndex, 1);
         getComment.noOfLikes -= 1;
       }
-      const getNoOfLikesCount = getComment.likes.length;
+
       await getComment.save();
 
       return res.status(201).json({

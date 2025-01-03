@@ -2,6 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 import {
   createNewCommentAction,
   getAllCommentsByPostIdAction,
+  likeDisLikeCommentAction,
 } from './CommentActions';
 
 const initial_State = {
@@ -63,6 +64,38 @@ const commentSlice = createSlice({
 
     // ! Reject Get All Comments By PostId
     builder.addCase(getAllCommentsByPostIdAction.rejected, (state, action) => {
+      state.isLoading = false;
+      state.commentError = action.payload.message;
+      state.commentSuccess = null;
+    });
+
+    // + Like Or DisLike
+
+    // & Pending Like Or DisLike
+    builder.addCase(likeDisLikeCommentAction.pending, (state) => {
+      state.isLoading = true;
+      state.commentError = null;
+      state.commentSuccess = null;
+      state.currentComment = null;
+    });
+    // $ Like Or DisLike
+    builder.addCase(likeDisLikeCommentAction.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.commentSuccess = action.payload.data.message;
+      state.commentError = null;
+
+      // Update the specific comment in the state
+      const updatedComment = action.payload.data.comment;
+      const commentIndex = state.commentsByPost.findIndex(
+        (comment) => comment._id === updatedComment._id
+      );
+      if (commentIndex !== -1) {
+        state.commentsByPost[commentIndex] = updatedComment;
+      }
+    });
+
+    // ! Reject Like Or DisLike
+    builder.addCase(likeDisLikeCommentAction.rejected, (state, action) => {
       state.isLoading = false;
       state.commentError = action.payload.message;
       state.commentSuccess = null;

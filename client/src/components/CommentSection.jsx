@@ -11,6 +11,7 @@ import {
 } from '../redux/Comment/CommentActions';
 import AllComments from './AllComments';
 
+// # Main Function
 const CommentSection = ({ postId }) => {
   const dispatch = useDispatch();
   const [comment, setComment] = useState('');
@@ -76,7 +77,7 @@ const CommentSection = ({ postId }) => {
                   <p className='text-gray-400'>{commentsByPost?.length}</p>
                 </div>
               </div>
-              <AllComments />
+              <AllComments postId={postId} />
             </div>
           )}
         </div>

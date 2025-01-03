@@ -48,3 +48,27 @@ export const getAllCommentsByPostIdAction = createAsyncThunk(
     }
   }
 );
+
+// * Like DisLike Comment Action
+export const likeDisLikeCommentAction = createAsyncThunk(
+  'likeDisLikeCommentAction',
+  async (commentId) => {
+    try {
+      const response = await fetch(`/api/comments/likecomment/${commentId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      const data = await response.json();
+      if (!data.successStatus) {
+        return data.message;
+      } else {
+        return { data, commentId };
+      }
+    } catch (error) {
+      return error.message;
+    }
+  }
+);
