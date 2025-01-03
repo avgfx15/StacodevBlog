@@ -76,7 +76,10 @@ export const likeUnLikeCommentController = async (req, res, next) => {
     const commentId = req.params.commentId;
 
     // & Find By comment Id
-    const getComment = await CommentSchema.findById(commentId);
+    const getComment = await CommentSchema.findById(commentId).populate(
+      'userId',
+      'username profilePic'
+    );
 
     // * If no comment
     if (!getComment) {
@@ -119,15 +122,22 @@ export const editCommentController = async (req, res, next) => {
 
     // & Get LoggedIn User
     const loggedInUser = req.user;
-    const findComment = await CommentSchema.findById(commentId);
+    const findComment = await CommentSchema.findById(commentId).populate(
+      'userId',
+      'username profilePic'
+    );
     // * If no comment
     if (!findComment) {
       return res
         .status(401)
         .json({ message: 'Comment not exist', successStatus: false });
     }
+
     // & Check if user is owner of comment
-    if (findComment.userId !== loggedInUser.id && !loggedInUser.isAdmin) {
+    if (
+      findComment.userId._id.toHexString() !== loggedInUser.id &&
+      !loggedInUser.isAdmin
+    ) {
       return res.status(401).json({
         message: 'You are not owner of comment',
         successStatus: false,
@@ -138,12 +148,13 @@ export const editCommentController = async (req, res, next) => {
         commentId,
         { commentText: req.body.commentText },
         { new: true }
-      );
+      ).populate('userId', 'username profilePic');
+
       // & Return updated comment
       return res.status(201).json({
         message: 'Comment updated',
         successStatus: true,
-        comment: updatedComment,
+        updatedComment: updatedComment,
       });
     }
   } catch (error) {

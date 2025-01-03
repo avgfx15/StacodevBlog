@@ -1,6 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import {
   createNewCommentAction,
+  editCommentByCommentIdByOwnerAction,
   getAllCommentsByPostIdAction,
   likeDisLikeCommentAction,
 } from './CommentActions';
@@ -100,6 +101,44 @@ const commentSlice = createSlice({
       state.commentError = action.payload.message;
       state.commentSuccess = null;
     });
+
+    // * Update Edit Comment
+
+    // & Pending Like Or DisLike
+    builder.addCase(editCommentByCommentIdByOwnerAction.pending, (state) => {
+      state.isLoading = true;
+      state.commentError = null;
+      state.commentSuccess = null;
+      state.currentComment = null;
+    });
+    // $ Like Or DisLike
+    builder.addCase(
+      editCommentByCommentIdByOwnerAction.fulfilled,
+      (state, action) => {
+        state.isLoading = false;
+        state.commentSuccess = action.payload?.data?.message;
+        state.commentError = null;
+
+        // Update the specific comment in the state
+        const editedComment = action.payload.data?.updatedComment;
+        const commentIndex = state.commentsByPost.findIndex(
+          (comment) => comment._id === editedComment._id
+        );
+        if (commentIndex !== -1) {
+          state.commentsByPost[commentIndex] = editedComment;
+        }
+      }
+    );
+
+    // ! Reject Like Or DisLike
+    builder.addCase(
+      editCommentByCommentIdByOwnerAction.rejected,
+      (state, action) => {
+        state.isLoading = false;
+        state.commentError = action.payload.message;
+        state.commentSuccess = null;
+      }
+    );
   },
 });
 

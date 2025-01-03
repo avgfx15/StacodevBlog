@@ -72,3 +72,29 @@ export const likeDisLikeCommentAction = createAsyncThunk(
     }
   }
 );
+
+// / Edit Or Update Comment By Owner By Comment Id
+export const editCommentByCommentIdByOwnerAction = createAsyncThunk(
+  'editCommentById',
+  async ({ commentId, editedComment }) => {
+    try {
+      const response = await fetch(`/api/comments/editcomment/${commentId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ commentText: editedComment }),
+      });
+      const data = await response.json();
+      console.log(data);
+
+      if (!data.successStatus) {
+        return data.message;
+      } else {
+        return { data, commentId };
+      }
+    } catch (error) {
+      return error.message;
+    }
+  }
+);
