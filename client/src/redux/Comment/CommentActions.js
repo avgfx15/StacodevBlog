@@ -98,3 +98,24 @@ export const editCommentByCommentIdByOwnerAction = createAsyncThunk(
     }
   }
 );
+
+// - Delete Comment By Owner Or Admin By comment Id
+export const deleteCommentByCommentIdAction = createAsyncThunk(
+  'deleteComment',
+  async (commentId) => {
+    try {
+      const response = await fetch(`/api/comments/deletecomment/${commentId}`, {
+        method: 'DELETE',
+      });
+      const data = await response.json();
+      console.log(data);
+      if (!data.successStatus) {
+        return data.message;
+      } else {
+        return { data, commentId };
+      }
+    } catch (error) {
+      return error.message;
+    }
+  }
+);

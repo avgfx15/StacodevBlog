@@ -1,6 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import {
   createNewCommentAction,
+  deleteCommentByCommentIdAction,
   editCommentByCommentIdByOwnerAction,
   getAllCommentsByPostIdAction,
   likeDisLikeCommentAction,
@@ -34,7 +35,8 @@ const commentSlice = createSlice({
       state.isLoading = false;
       state.commentSuccess = action.payload.message;
       state.commentContent = action.payload.Comment;
-      state.commentsByPost.push(action.payload.Comment);
+      state.commentsByPost = [action.payload.comment, ...state.commentsByPost];
+      // state.commentsByPost.push(action.payload.Comment);
       state.commentError = null;
     });
 
@@ -137,6 +139,31 @@ const commentSlice = createSlice({
         state.isLoading = false;
         state.commentError = action.payload.message;
         state.commentSuccess = null;
+      }
+    );
+
+    // - Delet Comment By Owner Or Admin By CommentId
+    // & Pending Like Or DisLike
+    builder.addCase(deleteCommentByCommentIdAction.pending, (state) => {
+      state.isLoading = true;
+      state.commentError = null;
+      state.commentSuccess = null;
+      state.currentComment = null;
+    });
+    // - Delete Comment
+    builder.addCase(
+      deleteCommentByCommentIdAction.fulfilled,
+      (state, action) => {
+        state.isLoading = false;
+        state.commentSuccess = action.payload?.data?.message;
+        state.commentError = null;
+        // Remove the deleted comment from the state
+        const commentIndex = state.commentsByPost.findIndex(
+          (comment) => comment._id === action.payload?.data?.commentId
+        );
+        if (commentIndex !== -1) {
+          state.commentsByPost = state.commentsByPost.splice(commentIndex, 1);
+        }
       }
     );
   },

@@ -161,3 +161,38 @@ export const editCommentController = async (req, res, next) => {
     return next(errorHandler(500, 'Failed to edit comment'));
   }
 };
+
+// - Delete Comment By Owner or Admin By Comment Id
+export const deleteCommentByCommentIdController = async (req, res, next) => {
+  try {
+    const loggedInUser = req.user;
+    const commentId = req.params.commentId;
+    const findComment = await CommentSchema.findById(commentId).populate(
+      'userId',
+      'username profilePic'
+    );
+    // * If no comment
+    if (!findComment) {
+      return res
+        .status(401)
+        .json({ message: 'Comment not exist', successStatus: false });
+    }
+    // & Check if user is owner of comment
+    if (
+      findComment.userId._id.toHexString() !== loggedInUser.id &&
+      !loggedInUser.isAdmin
+    ) {
+      return res.status(401).json({
+        message: 'You are not owner of comment',
+        successStatus: false,
+      });
+    }
+    // & Delete comment by user
+    await CommentSchema.findByIdAndDelete(commentId);
+    return res
+      .status(200)
+      .json({ message: 'Comment deleted', successStatus: true });
+  } catch (error) {
+    return next(errorHandler(500, 'Failed to delete comment'));
+  }
+};

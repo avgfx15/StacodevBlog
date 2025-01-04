@@ -29,11 +29,12 @@ const CommentSection = ({ postId }) => {
     };
 
     dispatch(createNewCommentAction(newComment));
+    setComment('');
   };
 
   useEffect(() => {
     dispatch(getAllCommentsByPostIdAction(postId));
-  }, [dispatch, postId]);
+  }, [dispatch, postId, commentsByPost]);
 
   return (
     <div className=''>

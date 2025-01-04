@@ -11,6 +11,7 @@ import { Textarea, Button } from 'flowbite-react';
 import { commentsByPostState } from '../redux/Comment/CommentSlice';
 import { currentUserState } from '../redux/User/UserSlice';
 import {
+  deleteCommentByCommentIdAction,
   editCommentByCommentIdByOwnerAction,
   likeDisLikeCommentAction,
 } from '../redux/Comment/CommentActions';
@@ -65,14 +66,15 @@ const AllComments = () => {
   // - Handle Delete Comment
   const handleDeleteComment = async (commentId) => {
     console.log(commentId);
+    dispatch(deleteCommentByCommentIdAction(commentId));
   };
 
   // # Render Function
   return (
     <div>
-      {commentsByPost?.map((comment) => (
+      {commentsByPost?.map((comment, ind) => (
         <div
-          key={comment?._id}
+          key={comment?._id || ind}
           className='flex p-4 items-center border-b dark:border-gray-600 text-sm'
         >
           <div className='flex-shrink-0 mr-3'>
@@ -87,24 +89,33 @@ const AllComments = () => {
               <span className='font-bold truncate text-sm'>
                 @ {comment?.userId?.username}
               </span>
-              <span>{moment(comment.createdAt).fromNow()}</span>
+              <span>{moment(comment?.createdAt).fromNow()}</span>
             </div>
-            {editingCommentId === comment._id ? (
+            {editingCommentId === comment?._id ? (
               <div>
                 <Textarea
                   className='mb-2'
                   value={editedComment}
                   onChange={(e) => setEditedComment(e.target.value)}
                 />
-                <div className='flex'>
+                <div className='flex gap-3'>
                   <Button
-                    onClick={() => handleUpdateComment(comment._id)}
+                    onClick={() => handleUpdateComment(comment?._id)}
                     className=''
                     gradientDuoTone='purpleToBlue'
                     type='button'
                     size='sm'
                   >
                     Save
+                  </Button>
+                  <Button
+                    onClick={() => setEditingCommentId(null)}
+                    className=''
+                    gradientDuoTone='pinkToOrange'
+                    type='button'
+                    size='sm'
+                  >
+                    Cancel
                   </Button>
                 </div>
               </div>
@@ -120,7 +131,7 @@ const AllComments = () => {
                 onClick={() => handleLikeDisLike(comment._id)}
                 className={`text-gray-600 hover:text-blue-600 ${
                   currentUser &&
-                  comment.likes.includes(currentUser._id) &&
+                  comment?.likes?.includes(currentUser._id) &&
                   '!text-blue-500'
                 }`}
               >
