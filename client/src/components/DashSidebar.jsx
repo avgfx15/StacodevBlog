@@ -1,6 +1,11 @@
 import { Sidebar } from 'flowbite-react';
 import { useEffect, useState } from 'react';
-import { HiArrowSmRight, HiUser } from 'react-icons/hi';
+import {
+  HiArrowSmRight,
+  HiUser,
+  HiUserGroup,
+  HiAnnotation,
+} from 'react-icons/hi';
 import { HiDocumentText } from 'react-icons/hi2';
 
 import { Link, useLocation } from 'react-router-dom';
@@ -57,7 +62,7 @@ const DashSidebar = () => {
             <Link to='/dashboard?tab=users'>
               <Sidebar.Item
                 active={tab === 'users'}
-                icon={HiDocumentText}
+                icon={HiUserGroup}
                 labelColor='dark'
                 as='div'
               >
@@ -69,7 +74,7 @@ const DashSidebar = () => {
             <Link to='/dashboard?tab=comments'>
               <Sidebar.Item
                 active={tab === 'comments'}
-                icon={HiDocumentText}
+                icon={HiAnnotation}
                 labelColor='dark'
                 as='div'
               >
