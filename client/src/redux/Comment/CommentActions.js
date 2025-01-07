@@ -99,6 +99,8 @@ export const editCommentByCommentIdByOwnerAction = createAsyncThunk(
 export const deleteCommentByCommentIdAction = createAsyncThunk(
   'deleteComment',
   async (commentId) => {
+    console.log(commentId);
+
     try {
       const response = await fetch(`/api/comments/deletecomment/${commentId}`, {
         method: 'DELETE',
@@ -106,6 +108,22 @@ export const deleteCommentByCommentIdAction = createAsyncThunk(
       const data = await response.json();
 
       return { data, commentId };
+    } catch (error) {
+      return error.message;
+    }
+  }
+);
+
+// / Get All Comments
+export const getAllCommentsAction = createAsyncThunk(
+  'getAllComments',
+  async () => {
+    try {
+      const response = await fetch('/api/comments/allcomments', {
+        method: 'GET',
+      });
+      const data = await response.json();
+      return data;
     } catch (error) {
       return error.message;
     }

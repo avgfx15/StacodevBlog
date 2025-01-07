@@ -2,15 +2,16 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import { useEffect, useState } from 'react';
 
-import { allUsersState, currentUserState } from '../redux/User/UserSlice';
+import { currentUserState } from '../redux/User/UserSlice';
 import { Button, Table } from 'flowbite-react';
-import { Link } from 'react-router-dom';
+
 import ModalComponent from './ModalComponent';
+
 import {
-  deleteUserByAdminAction,
-  getAllUsersByAdminAction,
-} from '../redux/User/UserActions';
-import { FaTimes, FaCheck } from 'react-icons/fa';
+  deleteCommentByCommentIdAction,
+  getAllCommentsAction,
+} from '../redux/Comment/CommentActions';
+import { allCommentsState } from '../redux/Comment/CommentSlice';
 
 // # DashAllPost Component
 const DashComments = () => {
@@ -20,28 +21,29 @@ const DashComments = () => {
   const [showModalForm, setShowModalForm] = useState(false);
 
   // & Post Id
-  const [getUser, setGetUser] = useState(null);
+  const [commentId, setCommentId] = useState(null);
 
   // & Get CurrentUser details
   const currentUser = useSelector(currentUserState);
 
   // & Get All Post by currentUser
-  const allUsers = useSelector(allUsersState);
-  console.log(allUsers);
+  const allComments = useSelector(allCommentsState);
+  console.log(allComments);
 
   // & Initially show 9 posts
-  const [visibleUsers, setVisibleUsers] = useState(9);
+  const [visibleComments, setVisibleComments] = useState(9);
 
-  const handleShowMorePost = () => {
-    setVisibleUsers((prev) => prev + 9); // Increase by 9 more posts
+  const handleShowMoreComment = () => {
+    setVisibleComments((prev) => prev + 9); // Increase by 9 more posts
   };
 
-  const displayedUsers = allUsers ? allUsers.slice(0, visibleUsers) : [];
+  const displayedComments = allComments
+    ? allComments.slice(0, visibleComments)
+    : [];
 
   // - Delete Post
-  const handleToDeleteUserByAdmin = async () => {
-    dispatch(deleteUserByAdminAction(getUser._id));
-    dispatch(getAllUsersByAdminAction());
+  const handleToDeleteCommentByAdmin = async () => {
+    dispatch(deleteCommentByCommentIdAction(commentId));
 
     setShowModalForm(false);
   };
@@ -49,81 +51,45 @@ const DashComments = () => {
   // & Mount All Post By currentUser
   useEffect(() => {
     if (currentUser.isAdmin) {
-      dispatch(getAllUsersByAdminAction());
+      dispatch(getAllCommentsAction());
     }
   }, [currentUser, dispatch]);
 
   // # render
   return (
     <div className='table-auto overflow-x-scroll md:mx-auto p-3 scrollbar scrollbar-track-slate-100 scrollbar-thumb-slate-300 dark:scrollbar-track-slate-700 dark:scrollbar-thumb-slate-600'>
-      {currentUser.isAdmin && allUsers?.length > 0 ? (
+      {currentUser.isAdmin && allComments?.length > 0 ? (
         <div>
           <Table hoverable className='shadow-md'>
             <Table.Head className='text-center'>
               <Table.HeadCell>Date Updated</Table.HeadCell>
+              <Table.HeadCell>Comment Id</Table.HeadCell>
               <Table.HeadCell>Comment Content</Table.HeadCell>
               <Table.HeadCell>No Of Likes</Table.HeadCell>
-              <Table.HeadCell>Comment Post Id</Table.HeadCell>
-              <Table.HeadCell>Comment User Id</Table.HeadCell>
-              <Table.HeadCell>Admin</Table.HeadCell>
+              <Table.HeadCell>Comment On Post Title</Table.HeadCell>
+              <Table.HeadCell>Comment User Name</Table.HeadCell>
               <Table.HeadCell>Delete</Table.HeadCell>
             </Table.Head>
             <Table.Body className='divide-y'>
-              {displayedUsers.map((user) => (
+              {displayedComments.map((comment) => (
                 <Table.Row
-                  key={user._id}
+                  key={comment._id}
                   className='bg-white dark:bg-gray-600 dark:border-gray-900'
                 >
                   <Table.Cell>
-                    {new Date(user.updatedAt).toLocaleDateString()}
+                    {new Date(comment.updatedAt).toLocaleDateString()}
                   </Table.Cell>
-                  <Table.Cell>
-                    <Link to={`/posts/${user.username}`}>
-                      <img
-                        src={
-                          typeof user.profilePic === 'string' &&
-                          (user?.profilePic.startsWith('http://') ||
-                            user?.profilePic.startsWith('https://'))
-                            ? user?.profilePic
-                            : `./uploads/` + user?.profilePic
-                        }
-                        alt={user.username}
-                        className='w-20 h-10 object-cover bg-gray-500'
-                      />
-                    </Link>
-                  </Table.Cell>
-                  <Table.Cell>
-                    <Link
-                      to={`/user/${user.unsename}`}
-                      className='font-bold text-black dark:text-white'
-                    >
-                      {user.username}
-                    </Link>
-                  </Table.Cell>
-                  <Table.Cell>{user.name}</Table.Cell>
-                  <Table.Cell>
-                    <Link
-                      to={`/user/${user.unsename}`}
-                      className='font-bold text-black dark:text-white'
-                    >
-                      {user.email}
-                    </Link>
-                  </Table.Cell>
-                  <Table.Cell>
-                    <span className='hover:underline text-center'>
-                      {user.isAdmin === false ? (
-                        <FaTimes className='text-2xl text-red-700' />
-                      ) : (
-                        <FaCheck className='text-green-500 text-2xl' />
-                      )}
-                    </span>
-                  </Table.Cell>
+                  <Table.Cell>{comment._id}</Table.Cell>
+                  <Table.Cell>{comment.commentText}</Table.Cell>
+                  <Table.Cell>{comment.noOfLikes}</Table.Cell>
+                  <Table.Cell>{comment.postId.title}</Table.Cell>
+                  <Table.Cell>{comment.userId.name}</Table.Cell>
                   <Table.Cell>
                     <span
                       className='font-medium text-red-600 hover:underline cursor-pointer'
                       onClick={() => {
                         setShowModalForm(true);
-                        setGetUser(user);
+                        setCommentId(comment._id);
                       }}
                     >
                       Delete
@@ -133,9 +99,9 @@ const DashComments = () => {
               ))}
             </Table.Body>
           </Table>
-          {visibleUsers < allUsers.length && (
+          {visibleComments < allComments.length && (
             <Button
-              onClick={handleShowMorePost}
+              onClick={handleShowMoreComment}
               className='w-full text-white self-center my-3 text-lg'
             >
               Show More
@@ -143,14 +109,14 @@ const DashComments = () => {
           )}
         </div>
       ) : (
-        <h3>There is No Post By You.</h3>
+        <h3>There is No Comments Yet.</h3>
       )}
       <ModalComponent
         showModalForm={showModalForm}
         setShowModalForm={setShowModalForm}
-        message='Are you sure you want to delete User ?'
-        handleToDeleteUserByAdmin={handleToDeleteUserByAdmin}
-        actionType='user'
+        message='Are you sure you want to delete Comment ?'
+        handleToDeleteCommentByAdmin={handleToDeleteCommentByAdmin}
+        actionType='comment'
         userType='admin'
       />
     </div>

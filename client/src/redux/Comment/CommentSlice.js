@@ -3,6 +3,7 @@ import {
   createNewCommentAction,
   deleteCommentByCommentIdAction,
   editCommentByCommentIdByOwnerAction,
+  getAllCommentsAction,
   getAllCommentsByPostIdAction,
   likeDisLikeCommentAction,
 } from './CommentActions';
@@ -180,9 +181,38 @@ const commentSlice = createSlice({
           state.commentsByPost = state.commentsByPost.filter(
             (comment) => comment._id !== action.payload?.commentId
           );
+          state.allComments = state.allComments.filter(
+            (comment) => comment._id !== action.payload?.commentId
+          );
         }
       }
     );
+
+    // / Get All Comments
+    // & Pending Get All Comments
+    builder.addCase(getAllCommentsAction.pending, (state) => {
+      state.isLoading = true;
+      state.commentError = null;
+      state.commentSuccess = null;
+    });
+    // $ Get Comments
+    builder.addCase(getAllCommentsAction.fulfilled, (state, action) => {
+      state.isLoading = false;
+      if (!action.payload.successStatus) {
+        state.commentError = action.payload.message;
+        state.commentSuccess = null;
+      } else {
+        state.allComments = action.payload.AllComments;
+        state.commentSuccess = action.payload.message;
+      }
+    });
+
+    // ! Reject Get All Comments
+    builder.addCase(getAllCommentsAction.rejected, (state, action) => {
+      state.isLoading = false;
+      state.commentError = action.payload.message;
+      state.commentSuccess = null;
+    });
   },
 });
 

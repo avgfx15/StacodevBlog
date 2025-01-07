@@ -224,9 +224,11 @@ export const getAllCommentsController = async (req, res, next) => {
           .status(404)
           .json({ message: 'No comments found', successStatus: false });
       } else {
-        return res
-          .status(200)
-          .json({ message: 'All Comments', AllComments: getAllComments });
+        return res.status(200).json({
+          message: 'All Comments',
+          successStatus: true,
+          AllComments: getAllComments,
+        });
       }
     }
   } catch (error) {
