@@ -17,7 +17,10 @@ import {
 import { useEffect } from 'react';
 import AdminPrivateRoute from './components/AdminPrivateRoute';
 import CreateNewPost from './pages/CreateNewPost';
-import { getAllPostsAction } from './redux/Post/PostActions';
+import {
+  getAllPostsAction,
+  getRecentPostAction,
+} from './redux/Post/PostActions';
 import UpdatePost from './pages/UpdatePost';
 import PostPage from './pages/PostPage';
 import ScrollToTop from './components/ScrollToTop';
@@ -35,6 +38,9 @@ const App = () => {
   // & Auto Clear Alert for successMsg and errorMsg
   useEffect(() => {
     dispatch(getAllPostsAction());
+    dispatch(getRecentPostAction());
+    console.log();
+
     if (successMsg || errorMsg) {
       setTimeout(() => {
         dispatch(clearMessageAction());

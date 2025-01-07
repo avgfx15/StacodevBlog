@@ -15,6 +15,7 @@ import {
   editCommentByCommentIdByOwnerAction,
   likeDisLikeCommentAction,
 } from '../redux/Comment/CommentActions';
+import { currentPostState } from '../redux/Post/PostSlice';
 
 // # Main Function
 const AllComments = () => {
@@ -28,8 +29,12 @@ const AllComments = () => {
   // & Get Edited Conetnt
   const [editedComment, setEditedComment] = useState(null);
 
+  // & Get Current Post
+  const currentPost = useSelector(currentPostState);
+
   // & Get all Comments by post Id
   const commentsByPost = useSelector(commentsByPostState);
+  console.log(commentsByPost);
 
   // & Get Current LoggedIn User
   const currentUser = useSelector(currentUserState);
@@ -65,7 +70,6 @@ const AllComments = () => {
 
   // - Handle Delete Comment
   const handleDeleteComment = async (commentId) => {
-    console.log(commentId);
     dispatch(deleteCommentByCommentIdAction(commentId));
   };
 

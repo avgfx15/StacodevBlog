@@ -39,15 +39,8 @@ export const createNewPostAction = createAsyncThunk(
         body: JSON.stringify(newPostData),
       });
       const data = await response.json();
-      // % Handle Error
-      if (data.success === false) {
-        return data.message;
-      }
-      if (response.ok) {
-        console.log('New Post Created');
 
-        return data;
-      }
+      return data;
     } catch (error) {
       return error.message;
     }
@@ -59,21 +52,22 @@ export const getAllPostsAction = createAsyncThunk(
   'getAllPostsAction',
   async () => {
     try {
-      const response = await fetch('api/posts/getallposts', {
+      const response = await fetch('/api/posts/getallposts', {
         method: 'GET',
       });
       const data = await response.json();
 
-      // % Handle Error
+      // Handle Error
       if (data.success === false) {
-        return data.message;
+        throw new Error(data.message); // Throw error to trigger the `rejected` case
       }
-      // % Check if response is OK
+
+      // Check if response is OK
       if (response.ok) {
-        return data.AllPost;
+        return data.AllPost; // Return the posts directly
       }
     } catch (error) {
-      return error.message;
+      throw new Error(error.message); // Throw error to trigger the `rejected` case
     }
   }
 );
@@ -211,6 +205,23 @@ export const updatePostByPostIdByAuthorAction = createAsyncThunk(
         console.log('New Post Created');
         return data;
       }
+    } catch (error) {
+      return error.message;
+    }
+  }
+);
+
+// / Get All Post
+export const getRecentPostAction = createAsyncThunk(
+  'recentArticlePost',
+  async () => {
+    try {
+      const response = await fetch(`/api/posts/recentpost`, {
+        method: 'GET',
+      });
+      const data = await response.json();
+
+      return data;
     } catch (error) {
       return error.message;
     }

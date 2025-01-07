@@ -33,11 +33,20 @@ const commentSlice = createSlice({
     // $ Create New Comment Fullfilled
     builder.addCase(createNewCommentAction.fulfilled, (state, action) => {
       state.isLoading = false;
-      state.commentSuccess = action.payload.message;
-      state.commentContent = action.payload.Comment;
-      state.commentsByPost = [action.payload.comment, ...state.commentsByPost];
-      // state.commentsByPost.push(action.payload.Comment);
-      state.commentError = null;
+      if (!action.payload.successStatus) {
+        state.commentError = action.payload.message;
+      } else {
+        state.commentSuccess = action.payload.message;
+        state.commentContent = action.payload.Comment;
+
+        // % Ensure action.payload.Comment is treated as an object, not an array
+        const newComment = Array.isArray(action.payload.Comment)
+          ? action.payload.Comment[0]
+          : action.payload.Comment;
+
+        // % Add the new comment to the existing comments array
+        state.commentsByPost = [newComment, ...state.commentsByPost];
+      }
     });
 
     // ! Reject Create New Comment
@@ -60,9 +69,15 @@ const commentSlice = createSlice({
     // $ Get All Comments By PostId
     builder.addCase(getAllCommentsByPostIdAction.fulfilled, (state, action) => {
       state.isLoading = false;
-      state.commentSuccess = action.payload.message;
-      state.commentsByPost = action.payload.allComments;
-      state.commentError = null;
+
+      if (!action.payload.successStatus) {
+        state.commentError = action.payload.message;
+        state.commentsByPost = [];
+      } else {
+        state.commentsByPost = action.payload.allComments;
+        state.commentSuccess = action.payload.message;
+        state.commentError = null;
+      }
     });
 
     // ! Reject Get All Comments By PostId
@@ -150,19 +165,21 @@ const commentSlice = createSlice({
       state.commentSuccess = null;
       state.currentComment = null;
     });
+
     // - Delete Comment
     builder.addCase(
       deleteCommentByCommentIdAction.fulfilled,
       (state, action) => {
-        state.isLoading = false;
-        state.commentSuccess = action.payload?.data?.message;
-        state.commentError = null;
-        // Remove the deleted comment from the state
-        const commentIndex = state.commentsByPost.findIndex(
-          (comment) => comment._id === action.payload?.data?.commentId
-        );
-        if (commentIndex !== -1) {
-          state.commentsByPost = state.commentsByPost.splice(commentIndex, 1);
+        if (!action.payload.data.successStatus) {
+          state.isLoading = false;
+          state.commentSuccess = action.payload?.data?.message;
+          state.commentError = null;
+        } else {
+          state.commentSuccess = action.payload?.data?.message;
+          // Remove the deleted comment from the state
+          state.commentsByPost = state.commentsByPost.filter(
+            (comment) => comment._id !== action.payload?.commentId
+          );
         }
       }
     );

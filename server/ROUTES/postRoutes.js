@@ -6,6 +6,7 @@ import {
   deletePostController,
   updatePostController,
   getPostByPostIdController,
+  getRecentPostController,
 } from '../CONTROLLERS/postControllers.js';
 
 const postRouter = express.Router();
@@ -36,5 +37,8 @@ postRouter.put(
   verifyAuthUserMiddleware,
   updatePostController
 );
+
+// / Get Recent Post
+postRouter.get('/recentpost', getRecentPostController);
 
 export default postRouter;

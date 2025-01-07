@@ -69,12 +69,15 @@ app.use('/api/comments', commentRouter);
 
 // & Error Middleware
 app.use((err, req, res, next) => {
+  console.error('Error:', err.stack);
   const statusCode = err.statusCode || 500;
   const errorMessage = err.message || 'Internal server error';
 
-  res
-    .status(statusCode)
-    .json({ message: errorMessage, success: false, statusCode: statusCode });
+  res.status(statusCode).json({
+    message: errorMessage,
+    successStatus: false,
+    statusCode: statusCode,
+  });
 });
 
 // $ Listen app

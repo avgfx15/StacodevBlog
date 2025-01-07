@@ -8,7 +8,9 @@ import { Button, Spinner } from 'flowbite-react';
 import 'react-quill/dist/quill.snow.css';
 import CallToAction from '../components/CallToAction';
 import CommentSection from '../components/CommentSection';
+import RecentArticlePost from '../components/RecentArticlePost';
 
+// # PostPage Main Function
 const PostPage = () => {
   const dispatch = useDispatch();
   const { postslug } = useParams();
@@ -59,8 +61,9 @@ const PostPage = () => {
         <CallToAction />
       </div>
       <div className='max-w-4xl mx-auto w-full'>
-        <CommentSection postId={currentPost?._id} />
+        <CommentSection />
       </div>
+      <RecentArticlePost />
     </main>
   );
 };

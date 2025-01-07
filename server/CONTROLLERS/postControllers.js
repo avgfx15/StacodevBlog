@@ -39,9 +39,11 @@ export const createNewPostController = async (req, res, next) => {
     });
     // % Save newPost in DB
     const savedPost = await newBlog.save();
-    res
-      .status(201)
-      .json({ message: 'Post created successfully', newPost: savedPost });
+    res.status(201).json({
+      message: 'Post created successfully',
+      successStatus: false,
+      newPost: savedPost,
+    });
   } catch (error) {
     return next(errorHandler(500, 'Failed to Create New Post'));
   }
@@ -92,6 +94,7 @@ export const getAllPostController = async (req, res, next) => {
       AllPost: allPosts,
       totalPostsCount,
       lastMonthPosts,
+      successStatus: true,
     });
   } catch (error) {
     return next(errorHandler(500, 'Failed to Get All Posts'));
@@ -210,5 +213,17 @@ export const updatePostController = async (req, res, next) => {
     }
   } catch (error) {
     return next(errorHandler(500, 'Failed to update post'));
+  }
+};
+
+export const getRecentPostController = async (req, res, next) => {
+  try {
+    const getRecentPost = await PostSchema.find()
+      .sort({ updatedAt: -1 })
+      .limit(3);
+
+    return res.status(200).json(getRecentPost);
+  } catch (error) {
+    return next(errorHandler(500, 'Failed to get recent Post'));
   }
 };

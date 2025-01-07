@@ -5,6 +5,7 @@ import {
   getAllPostsAction,
   getPostByPostIdAction,
   getPostByPostSlugAction,
+  getRecentPostAction,
   postsByLoggedInUserAction,
   updatePostByPostIdByAuthorAction,
   uploadPostImageAction,
@@ -19,6 +20,7 @@ const initialState = {
   postError: null,
   postsByLoggedInUser: [],
   message: null,
+  recentPosts: [],
 };
 
 const postSlice = createSlice({
@@ -66,8 +68,12 @@ const postSlice = createSlice({
     // + create New Post fulfilled
     builder.addCase(createNewPostAction.fulfilled, (state, action) => {
       state.isPostLoading = false;
-      state.allPost = [...state.post, action.payload];
-      state.postError = action.payload;
+      if (!action.payload.successStatus) {
+        state.postError = action.payload.message;
+      } else {
+        state.allPost = [...state.post, action.payload.newPost];
+        state.message = action.payload.message;
+      }
       state.postImageUrl = null;
     });
 
@@ -89,7 +95,7 @@ const postSlice = createSlice({
     // / Get All Posts
     builder.addCase(getAllPostsAction.fulfilled, (state, action) => {
       state.isPostLoading = false;
-      state.allPost = action.payload;
+      state.allPost = action.payload; // Use the payload directly
       state.postError = null;
     });
 
@@ -228,12 +234,33 @@ const postSlice = createSlice({
       state.isPostLoading = false;
       state.postError = action.payload;
     });
+
+    // / Get Recent Post
+    // & Get Recent Post Pending
+    builder.addCase(getRecentPostAction.pending, (state) => {
+      state.isPostLoading = true;
+      state.postError = null;
+      state.message = null;
+    });
+
+    // / Get Recent Post Fulfilled
+    builder.addCase(getRecentPostAction.fulfilled, (state, action) => {
+      state.isPostLoading = false;
+      state.recentPosts = action.payload;
+      state.message = action.payload.message;
+    });
+    // ! Get Recent Post Rejected
+    builder.addCase(getRecentPostAction.rejected, (state, action) => {
+      state.isPostLoading = false;
+      state.postError = action.payload;
+    });
   },
 });
 
 export const postReducer = postSlice.reducer;
 
 export const allPostState = (state) => state.postReducer.allPost;
+export const recentPostsState = (state) => state.postReducer.recentPosts;
 export const postsByLoggedInUserState = (state) =>
   state.postReducer.postsByLoggedInUser;
 export const postState = (state) => state.postReducer.post;

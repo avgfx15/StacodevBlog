@@ -20,13 +20,18 @@ export const createCommentController = async (req, res, next) => {
       });
       // & save comment to DB
       const savedComment = await newComment.save();
+
       if (!savedComment) {
         return next(errorHandler(401, 'Error to saved Comment'));
       } else {
+        const newSavedComment = await CommentSchema.find(
+          savedComment._id
+        ).populate('userId', 'username profilePic');
+
         return res.status(200).json({
           message: 'Comment saved Successfully',
           successStatus: true,
-          Comment: savedComment,
+          Comment: newSavedComment,
         });
       }
     }
@@ -49,8 +54,8 @@ export const getAllCommentsByPostIdController = async (req, res, next) => {
       .sort({ createdAt: -1 });
 
     // % if no comment by postId
-    if (!getAllCommentsByPostId) {
-      return res.status(401).json({
+    if (getAllCommentsByPostId.length === 0 || !getAllCommentsByPostId) {
+      return res.status(404).json({
         message: 'There is no comments for this post',
         successStatus: false,
       });
@@ -62,6 +67,8 @@ export const getAllCommentsByPostIdController = async (req, res, next) => {
       });
     }
   } catch (error) {
+    console.log('Error Catch');
+
     return next(errorHandler(500, 'Error to get all comments by PostId'));
   }
 };

@@ -12,12 +12,7 @@ export const createNewCommentAction = createAsyncThunk(
         body: JSON.stringify({ content, postId, userId }),
       });
       const data = await response.json();
-
-      if (!data.successStatus) {
-        return data.message;
-      } else {
-        return data;
-      }
+      return data;
     } catch (error) {
       return error.message;
     }
@@ -37,8 +32,9 @@ export const getAllCommentsByPostIdAction = createAsyncThunk(
         }
       );
       const data = await response.json();
-
-      if (data.successStatus === false) {
+      if (response.status === 404) {
+        return { message: data.message, successStatus: false };
+      } else if (!data.successStatus) {
         return data.message;
       } else {
         return data;
@@ -108,12 +104,8 @@ export const deleteCommentByCommentIdAction = createAsyncThunk(
         method: 'DELETE',
       });
       const data = await response.json();
-      console.log(data);
-      if (!data.successStatus) {
-        return data.message;
-      } else {
-        return { data, commentId };
-      }
+
+      return { data, commentId };
     } catch (error) {
       return error.message;
     }

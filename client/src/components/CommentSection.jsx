@@ -3,28 +3,32 @@ import { currentUserState } from '../redux/User/UserSlice';
 import { Link } from 'react-router-dom';
 import { Button, Textarea } from 'flowbite-react';
 import { useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
+
 import { commentsByPostState } from '../redux/Comment/CommentSlice';
 import {
   createNewCommentAction,
   getAllCommentsByPostIdAction,
 } from '../redux/Comment/CommentActions';
 import AllComments from './AllComments';
+import { currentPostState } from '../redux/Post/PostSlice';
 
 // # Main Function
-const CommentSection = ({ postId }) => {
+const CommentSection = () => {
   const dispatch = useDispatch();
   const [comment, setComment] = useState('');
 
   const currentUser = useSelector(currentUserState);
 
+  const currentPost = useSelector(currentPostState);
+
   const commentsByPost = useSelector(commentsByPostState);
+  console.log(commentsByPost);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     const newComment = {
       content: comment,
-      postId: postId,
+      postId: currentPost._id,
       userId: currentUser._id,
     };
 
@@ -33,8 +37,8 @@ const CommentSection = ({ postId }) => {
   };
 
   useEffect(() => {
-    dispatch(getAllCommentsByPostIdAction(postId));
-  }, [dispatch, postId, commentsByPost]);
+    dispatch(getAllCommentsByPostIdAction(currentPost._id));
+  }, [dispatch, currentPost]);
 
   return (
     <div className=''>
@@ -68,8 +72,10 @@ const CommentSection = ({ postId }) => {
               </div>
             </form>
           </div>
-          {commentsByPost?.length === 0 ? (
-            <p className='text-sm my-5'>Still no comments for this post</p>
+          {commentsByPost.length === 0 ? (
+            <p className='text-lg font-bold my-5 text-red-500'>
+              Still no comments for this post
+            </p>
           ) : (
             <div>
               <div className='flex gap-3 items-center'>
@@ -78,7 +84,7 @@ const CommentSection = ({ postId }) => {
                   <p className='text-gray-400'>{commentsByPost?.length}</p>
                 </div>
               </div>
-              <AllComments postId={postId} />
+              <AllComments />
             </div>
           )}
         </div>
@@ -92,11 +98,6 @@ const CommentSection = ({ postId }) => {
       )}
     </div>
   );
-};
-
-CommentSection.propTypes = {
-  // Add your methods here
-  postId: PropTypes.string.isRequired,
 };
 
 export default CommentSection;
