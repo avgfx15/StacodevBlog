@@ -203,3 +203,33 @@ export const deleteCommentByCommentIdController = async (req, res, next) => {
     return next(errorHandler(500, 'Failed to delete comment'));
   }
 };
+
+// / Get All Comments
+export const getAllCommentsController = async (req, res, next) => {
+  try {
+    const loggedInUser = req.user;
+
+    if (!loggedInUser.isAdmin) {
+      return res.status(401).json({
+        message: 'You are not authorized to get this details',
+        successStatus: false,
+      });
+    } else {
+      const getAllComments = await CommentSchema.find()
+        .populate('postId', 'title category')
+        .populate('userId', 'name email')
+        .sort({ updatedAt: -1 });
+      if (!getAllComments) {
+        return res
+          .status(404)
+          .json({ message: 'No comments found', successStatus: false });
+      } else {
+        return res
+          .status(200)
+          .json({ message: 'All Comments', AllComments: getAllComments });
+      }
+    }
+  } catch (error) {
+    return next(errorHandler(500, 'Failed to get all comments'));
+  }
+};

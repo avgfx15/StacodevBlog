@@ -7,6 +7,7 @@ import {
   deleteCommentByCommentIdController,
   editCommentController,
   getAllCommentsByPostIdController,
+  getAllCommentsController,
   likeUnLikeCommentController,
 } from '../CONTROLLERS/commentController.js';
 
@@ -45,6 +46,13 @@ commentRouter.delete(
   '/deletecomment/:commentId',
   verifyAuthUserMiddleware,
   deleteCommentByCommentIdController
+);
+
+// / Get All Comments
+commentRouter.get(
+  '/allcomments',
+  verifyAuthUserMiddleware,
+  getAllCommentsController
 );
 
 export default commentRouter;

@@ -1,7 +1,10 @@
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useParams } from 'react-router-dom';
-import { getPostByPostSlugAction } from '../redux/Post/PostActions';
+import {
+  getPostByPostSlugAction,
+  getRecentPostAction,
+} from '../redux/Post/PostActions';
 import { currentPostState, isPostLoadingState } from '../redux/Post/PostSlice';
 import { Button, Spinner } from 'flowbite-react';
 
@@ -21,6 +24,7 @@ const PostPage = () => {
 
   useEffect(() => {
     dispatch(getPostByPostSlugAction(postslug));
+    dispatch(getRecentPostAction());
   }, [dispatch, postslug]);
 
   if (isPostLoading) {

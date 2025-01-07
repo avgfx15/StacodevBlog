@@ -13,7 +13,7 @@ import {
 import { FaTimes, FaCheck } from 'react-icons/fa';
 
 // # DashAllPost Component
-const DashUsers = () => {
+const DashComments = () => {
   const dispatch = useDispatch();
 
   // & Declare showModalForm state
@@ -61,10 +61,10 @@ const DashUsers = () => {
           <Table hoverable className='shadow-md'>
             <Table.Head className='text-center'>
               <Table.HeadCell>Date Updated</Table.HeadCell>
-              <Table.HeadCell>ProfilePic</Table.HeadCell>
-              <Table.HeadCell>username</Table.HeadCell>
-              <Table.HeadCell>Name</Table.HeadCell>
-              <Table.HeadCell>Email</Table.HeadCell>
+              <Table.HeadCell>Comment Content</Table.HeadCell>
+              <Table.HeadCell>No Of Likes</Table.HeadCell>
+              <Table.HeadCell>Comment Post Id</Table.HeadCell>
+              <Table.HeadCell>Comment User Id</Table.HeadCell>
               <Table.HeadCell>Admin</Table.HeadCell>
               <Table.HeadCell>Delete</Table.HeadCell>
             </Table.Head>
@@ -157,4 +157,4 @@ const DashUsers = () => {
   );
 };
 
-export default DashUsers;
+export default DashComments;
