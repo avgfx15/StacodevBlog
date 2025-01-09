@@ -21,6 +21,7 @@ const initialState = {
   postsByLoggedInUser: [],
   message: null,
   recentPosts: [],
+  lastMonthPosts: 0,
 };
 
 const postSlice = createSlice({
@@ -95,14 +96,15 @@ const postSlice = createSlice({
     // / Get All Posts
     builder.addCase(getAllPostsAction.fulfilled, (state, action) => {
       state.isPostLoading = false;
-      state.allPost = action.payload; // Use the payload directly
+      state.lastMonthPosts = action.payload.lastMonthPosts;
+      state.allPost = action.payload.AllPost; // Use the payload directly
       state.postError = null;
     });
 
     // ! Get All Post Rejected
     builder.addCase(getAllPostsAction.rejected, (state, action) => {
       state.isPostLoading = false;
-      state.postError = action.payload;
+      state.postError = action.payload.message;
       state.post = [];
     });
 
@@ -260,6 +262,9 @@ const postSlice = createSlice({
 export const postReducer = postSlice.reducer;
 
 export const allPostState = (state) => state.postReducer.allPost;
+
+export const lastMonthPostsState = (state) => state.postReducer.lastMonthPosts;
+
 export const recentPostsState = (state) => state.postReducer.recentPosts;
 export const postsByLoggedInUserState = (state) =>
   state.postReducer.postsByLoggedInUser;

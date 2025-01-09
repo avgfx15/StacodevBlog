@@ -22,6 +22,7 @@ const initialState = {
   errorMsg: null,
   imageFileUrl: null,
   getUserData: null,
+  lastMonthRegisteredUsers: 0,
 };
 
 const userSlice = createSlice({
@@ -247,7 +248,8 @@ const userSlice = createSlice({
     builder.addCase(getAllUsersByAdminAction.fulfilled, (state, action) => {
       state.isLoading = false;
       state.error = null;
-      state.allUsers = action.payload;
+      state.allUsers = action.payload.allUsers;
+      state.lastMonthRegisteredUsers = action.payload.lastMonthRegisteredUsers;
     });
 
     // - Delete User By admin
@@ -289,6 +291,8 @@ const userSlice = createSlice({
 
     // $ Ge User Data Fulfilled
     builder.addCase(getUserByIdAction.fulfilled, (state, action) => {
+      console.log(action.payload);
+
       state.isLoading = false;
       state.error = null;
       state.getUserData = action.payload.User;
@@ -307,6 +311,9 @@ const userSlice = createSlice({
 export const userReducer = userSlice.reducer;
 
 export const allUsersState = (state) => state.userReducer.allUsers;
+
+export const lastMonthRegisteredUsersState = (state) =>
+  state.userReducer.lastMonthRegisteredUsers;
 
 export const currentUserState = (state) => state.userReducer.currentUser;
 

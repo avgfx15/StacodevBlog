@@ -15,6 +15,7 @@ const initial_State = {
   isLoading: false,
   commentError: null,
   commentSuccess: null,
+  lastMonthComments: 0,
 };
 
 const commentSlice = createSlice({
@@ -204,6 +205,7 @@ const commentSlice = createSlice({
       } else {
         state.allComments = action.payload.AllComments;
         state.commentSuccess = action.payload.message;
+        state.lastMonthComments = action.payload.lastMonthComments;
       }
     });
 
@@ -222,6 +224,9 @@ export const commentContentState = (state) =>
   state.commentReducer.commentContent;
 
 export const allCommentsState = (state) => state.commentReducer.allComments;
+
+export const lastMonthCommentsState = (state) =>
+  state.commentReducer.lastMonthComments;
 
 export const commentsByPostState = (state) =>
   state.commentReducer.commentsByPost;

@@ -224,10 +224,33 @@ export const getAllCommentsController = async (req, res, next) => {
           .status(404)
           .json({ message: 'No comments found', successStatus: false });
       } else {
+        // & Calculate time from create or update to till date
+
+        // & Get Current Date
+        const currentNow = new Date();
+
+        // & Get time more then 1 month
+        const oneMonthAgo = new Date(
+          currentNow.getFullYear(),
+          currentNow.getMonth() - 1,
+          currentNow.getDate()
+        );
+
+        const lastMonthComments = await CommentSchema.countDocuments({
+          updatedAt: { $gte: oneMonthAgo },
+        });
+
+        if (!lastMonthComments) {
+          return next(
+            errorHandler(404, 'There is no user register in last month')
+          );
+        }
+
         return res.status(200).json({
           message: 'All Comments',
           successStatus: true,
           AllComments: getAllComments,
+          lastMonthComments,
         });
       }
     }

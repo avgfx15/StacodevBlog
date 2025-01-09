@@ -57,15 +57,7 @@ export const getAllPostsAction = createAsyncThunk(
       });
       const data = await response.json();
 
-      // Handle Error
-      if (data.success === false) {
-        throw new Error(data.message); // Throw error to trigger the `rejected` case
-      }
-
-      // Check if response is OK
-      if (response.ok) {
-        return data.AllPost; // Return the posts directly
-      }
+      return data; // Return the posts directly
     } catch (error) {
       throw new Error(error.message); // Throw error to trigger the `rejected` case
     }
