@@ -5,6 +5,7 @@ import {
   HiUser,
   HiUserGroup,
   HiAnnotation,
+  HiChartPie,
 } from 'react-icons/hi';
 import { HiDocumentText } from 'react-icons/hi2';
 
@@ -50,7 +51,7 @@ const DashSidebar = () => {
             <Link to='/dashboard?tab=dashboard'>
               <Sidebar.Item
                 active={tab === 'dashboard'}
-                icon={HiDocumentText}
+                icon={HiChartPie}
                 labelColor='dark'
                 as='div'
               >
