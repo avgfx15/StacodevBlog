@@ -67,8 +67,14 @@ const DashBoardComponent = () => {
           </div>
           <div className='flex gap-3 text-sm'>
             <span className='text-green-500 flex items-center'>
-              <HiArrowNarrowUp />
-              {lastMonthRegisteredUsers}
+              {lastMonthRegisteredUsers === 0 ? (
+                0
+              ) : (
+                <>
+                  <HiArrowNarrowUp />
+                  <p>{lastMonthRegisteredUsers}</p>
+                </>
+              )}
             </span>
             <div className='text-gray-400'>Last Month</div>
           </div>
@@ -83,8 +89,14 @@ const DashBoardComponent = () => {
           </div>
           <div className='flex gap-3 text-sm'>
             <span className='text-green-500 flex items-center'>
-              <HiArrowNarrowUp />
-              {lastMonthComments || 0}
+              {lastMonthComments === 0 ? (
+                0
+              ) : (
+                <>
+                  <HiArrowNarrowUp />
+                  <p>{lastMonthComments}</p>
+                </>
+              )}
             </span>
             <div className='text-gray-400'>Last Month</div>
           </div>
@@ -99,8 +111,14 @@ const DashBoardComponent = () => {
           </div>
           <div className='flex gap-3 text-sm'>
             <span className='text-green-500 flex items-center'>
-              <HiArrowNarrowUp />
-              {lastMonthPosts || 0}
+              {lastMonthPosts === 0 ? (
+                0
+              ) : (
+                <>
+                  <HiArrowNarrowUp />
+                  <p>{lastMonthPosts}</p>
+                </>
+              )}
             </span>
             <div className='text-gray-400'>Last Month</div>
           </div>
