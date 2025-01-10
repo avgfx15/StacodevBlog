@@ -24,6 +24,7 @@ import {
 import UpdatePost from './pages/UpdatePost';
 import PostPage from './pages/PostPage';
 import ScrollToTop from './components/ScrollToTop';
+import SearchPage from './pages/SearchPage';
 
 // # Main App Component
 const App = () => {
@@ -67,6 +68,7 @@ const App = () => {
         <Route path='/posts/:postslug' element={<PostPage />} />
         <Route path='/signup' element={<SignUp />} />
         <Route path='/signin' element={<SignIn />} />
+        <Route path='/search' element={<SearchPage />} />
       </Routes>
       <FooterComponent />
     </BrowserRouter>

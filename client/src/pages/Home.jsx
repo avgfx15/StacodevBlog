@@ -9,7 +9,6 @@ import { Button } from 'flowbite-react';
 const Home = () => {
   const [visiblePost, setVisiblePost] = useState(8);
   const allPost = useSelector(allPostState);
-  const [showMore, setShowMore] = useState(false);
 
   const handleShowMore = () => {
     setVisiblePost((prev) => prev + 8);

@@ -53,7 +53,7 @@ export const createNewPostController = async (req, res, next) => {
 export const getAllPostController = async (req, res, next) => {
   try {
     // & Create sort condition as ascending order
-    const sortAscending = req.query.order === 'asc' ? 1 : -1;
+    const sortAscending = req.query.sort === 'asc' ? 1 : -1;
 
     // & get all post from DB with query
     const allPosts = await PostSchema.find({
@@ -62,11 +62,11 @@ export const getAllPostController = async (req, res, next) => {
       ...(req.query.title && { title: req.query.title }),
       ...(req.query.slug && { slug: req.query.slug }),
       ...(req.query.category && { category: req.query.category }),
-      ...(req.query.searchText && {
+      ...(req.query.searchTerm && {
         $or: [
-          { title: { $regex: req.query.searchText, $options: 'i' } },
+          { title: { $regex: req.query.searchTerm, $options: 'i' } },
           {
-            content: { $regex: req.query.searchText, $options: 'i' },
+            content: { $regex: req.query.searchTerm, $options: 'i' },
           },
         ],
       }),
@@ -90,7 +90,7 @@ export const getAllPostController = async (req, res, next) => {
     });
 
     res.status(201).json({
-      message: 'Post created successfully',
+      message: 'Get Post.',
       AllPost: allPosts,
       totalPostsCount,
       lastMonthPosts,
