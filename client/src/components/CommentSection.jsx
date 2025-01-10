@@ -22,7 +22,6 @@ const CommentSection = () => {
   const currentPost = useSelector(currentPostState);
 
   const commentsByPost = useSelector(commentsByPostState);
-  console.log(commentsByPost);
 
   const handleSubmit = async (e) => {
     e.preventDefault();

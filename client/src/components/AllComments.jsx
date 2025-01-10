@@ -30,7 +30,6 @@ const AllComments = () => {
 
   // & Get all Comments by post Id
   const commentsByPost = useSelector(commentsByPostState);
-  console.log(commentsByPost);
 
   // & Get Current LoggedIn User
   const currentUser = useSelector(currentUserState);
@@ -86,10 +85,12 @@ const AllComments = () => {
           </div>
           <div className='flex-1'>
             <div className='flex items-center mb-1'>
-              <span className='font-bold truncate text-sm'>
+              <span className='font-bold truncate text-sm text-teal-500'>
                 @ {comment?.userId?.username}
               </span>
-              <span>{moment(comment?.createdAt).fromNow()}</span>
+              <span className='text-gray-600'>
+                {moment(comment?.createdAt).fromNow()}
+              </span>
             </div>
             {editingCommentId === comment?._id ? (
               <div>
@@ -120,12 +121,14 @@ const AllComments = () => {
                 </div>
               </div>
             ) : (
-              <div className='flex-2'>
-                <p className='text-gray-400'>{comment?.commentText}</p>
+              <div className='flex-2 '>
+                <p className='text-gray-800 dark:text-gray-300'>
+                  {comment?.commentText}
+                </p>
               </div>
             )}
 
-            <div className='flex gap-3 mt-3'>
+            <div className='flex gap-3 mt-3 text-gray-600 font-semibold dark:text-gray-300'>
               <button
                 type='button'
                 onClick={() => handleLikeDisLike(comment._id)}
