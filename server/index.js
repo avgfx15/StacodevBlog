@@ -4,6 +4,8 @@ import express from 'express';
 // ~ Cookie - parser
 import cookieParser from 'cookie-parser';
 
+import path from 'path';
+
 import multer from 'multer';
 const app = express();
 
@@ -24,6 +26,9 @@ dotenv.config();
 
 // & Connect with DB
 connectDb();
+
+// ~ Set up middleware
+const __dirname = path.resolve();
 
 // & Listen Port
 const port = process.env.PORT;
@@ -66,6 +71,12 @@ app.use('/api/user', userRouter);
 app.use('/api/auth', authRouter);
 app.use('/api/posts', postRouter);
 app.use('/api/comments', commentRouter);
+
+app.use(express.static(path.join(__dirname, 'client/dist')));
+
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'client', 'dist', 'index.html'));
+});
 
 // & Error Middleware
 app.use((err, req, res, next) => {
