@@ -1,11 +1,14 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react-swc';
+import process from 'process';
 
-// https://vite.dev/config/
 export default defineConfig({
   server: {
     proxy: {
-      '/api': 'http://localhost:3200',
+      '/api':
+        process.env.NODE_ENV === 'production'
+          ? 'https://stacodevblog.onrender.com/'
+          : 'http://localhost:3200',
       secure: false,
     },
   },
