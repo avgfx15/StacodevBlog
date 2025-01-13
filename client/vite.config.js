@@ -12,7 +12,7 @@ const API_URL =
 export default defineConfig({
   server: {
     proxy: {
-      '/api': API_URL,
+      '/api': 'https://stacodevblog-backend.onrender.com',
       secure: false,
     },
   },
