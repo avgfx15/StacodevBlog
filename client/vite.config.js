@@ -4,8 +4,10 @@ import react from '@vitejs/plugin-react-swc';
 export default defineConfig({
   server: {
     proxy: {
-      '/api': 'https://stacodevblog-backend.onrender.com',
-      secure: true,
+      '/api': {
+        target: 'https://stacodevblog-backend.onrender.com',
+        secure: true, // Correctly placed inside the target configuration
+      },
     },
   },
   build: {
