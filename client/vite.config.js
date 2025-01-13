@@ -7,7 +7,7 @@ dotenv.config();
 export default defineConfig({
   server: {
     proxy: {
-      '/api': 'https://stacodevblog-backend.onrender.com',
+      '/api': import.meta.env.VITE_API_URL || 'http://localhost:3200',
       secure: false,
     },
   },
