@@ -33,7 +33,7 @@ const __dirname = path.resolve();
 // & Listen Port
 const port = process.env.PORT;
 
-app.get('/', (req, res) => res.send('Hello World!'));
+app.get('/', (req, res) => res.send('Welcome to MERNBLOGPOST BY STACODEV.'));
 
 // & Middleware
 app.use(express.json());
