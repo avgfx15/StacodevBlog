@@ -2,7 +2,7 @@
   "name": "blogpost",
   "version": "1.0.0",
   "description": "stacodev blog post",
-  "main": "index.js",
+  "main": "server/index.js",
 
  "dependencies": {
     "bcryptjs": "^2.4.3",
