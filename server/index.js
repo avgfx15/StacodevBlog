@@ -41,7 +41,11 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true })); // For parsing application/x-www-form-urlencoded
 
 // & Cors middleware
-app.use(cors());
+app.use(
+  cors({
+    origin: 'http://localhost:5173', // Replace with your frontend URL
+  })
+);
 
 // & CookieParser Middleware
 app.use(cookieParser());

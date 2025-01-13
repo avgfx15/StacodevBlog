@@ -219,7 +219,7 @@ export const updatePostController = async (req, res, next) => {
 };
 
 export const getRecentPostController = async (req, res, next) => {
-  log('getRecentPostController');
+  console.log('getRecentPostController');
   try {
     const getRecentPost = await PostSchema.find()
       .sort({ updatedAt: -1 })

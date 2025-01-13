@@ -5,8 +5,14 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'http://localhost:3200',
+        target: 'http://localhost:3200', // Replace with your backend URL
+        changeOrigin: true,
         secure: false, // Correctly placed inside the target configuration
+        onError(err, req, res) {
+          console.error('Proxy error:', err);
+          res.writeHead(500, { 'Content-Type': 'text/plain' });
+          res.end('Proxy error: ' + err.message);
+        },
       },
     },
   },
