@@ -4,10 +4,15 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
+const API_URL =
+  import.meta.env.MODE === 'production'
+    ? 'https://stacodevblog-backend.onrender.com'
+    : 'http://localhost:3200';
+
 export default defineConfig({
   server: {
     proxy: {
-      '/api': 'http://localhost:3200',
+      '/api': API_URL,
       secure: false,
     },
   },
@@ -25,6 +30,9 @@ export default defineConfig({
         },
       },
     },
+  },
+  define: {
+    'process.env.NODE_ENV': JSON.stringify(import.meta.env.MODE),
   },
   plugins: [react()],
 });
