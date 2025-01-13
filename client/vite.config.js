@@ -5,7 +5,7 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'https://stacodevblog-backend.onrender.com',
+        target: 'http://localhost:3200',
         secure: false, // Correctly placed inside the target configuration
       },
     },
