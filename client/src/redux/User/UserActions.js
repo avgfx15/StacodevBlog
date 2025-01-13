@@ -1,6 +1,6 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 
-const baseUrl = 'http://localhost:3200/';
+// const baseUrl = 'http://localhost:3200/';
 
 // + Signup New User
 export const newUserRegisterAction = createAsyncThunk(
@@ -87,7 +87,7 @@ export const uploadProfilePicAction = createAsyncThunk(
   'uploadProfilePic',
   async (formData) => {
     try {
-      const response = await fetch(baseUrl + 'upload', {
+      const response = await fetch('upload', {
         method: 'POST',
         body: formData,
       });
