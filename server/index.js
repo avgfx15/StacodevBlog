@@ -41,7 +41,12 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true })); // For parsing application/x-www-form-urlencoded
 
 // & Cors middleware
-app.use(cors());
+app.use(
+  cors({
+    origin: 'https://stacodevblog-frontend.onrender.com',
+    credentials: true,
+  })
+);
 
 // & CookieParser Middleware
 app.use(cookieParser());
