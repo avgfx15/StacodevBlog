@@ -1,5 +1,0 @@
-{
-  "scripts": {
-    "deploy": "cd server && npm run deploy && cd ../client && npm run deploy"
-  }
-}
