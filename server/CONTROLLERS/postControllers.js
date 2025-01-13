@@ -51,6 +51,8 @@ export const createNewPostController = async (req, res, next) => {
 
 // / Get All Post Controller
 export const getAllPostController = async (req, res, next) => {
+  console.log('getAllPostController');
+
   try {
     // & Create sort condition as ascending order
     const sortAscending = req.query.sort === 'asc' ? 1 : -1;
@@ -217,6 +219,7 @@ export const updatePostController = async (req, res, next) => {
 };
 
 export const getRecentPostController = async (req, res, next) => {
+  log('getRecentPostController');
   try {
     const getRecentPost = await PostSchema.find()
       .sort({ updatedAt: -1 })
