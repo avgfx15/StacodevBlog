@@ -6,7 +6,7 @@ export default defineConfig({
     proxy: {
       '/api': {
         target: 'https://stacodevblog-backend.onrender.com',
-        secure: true, // Correctly placed inside the target configuration
+        secure: false, // Correctly placed inside the target configuration
       },
     },
   },
