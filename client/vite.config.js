@@ -5,7 +5,7 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': 'https://stacodevblog-backend.onrender.com',
-      secure: false,
+      secure: true,
     },
   },
   build: {
