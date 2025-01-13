@@ -23,8 +23,5 @@ export default defineConfig({
       },
     },
   },
-  define: {
-    'process.env.NODE_ENV': JSON.stringify(import.meta.env.MODE),
-  },
   plugins: [react()],
 });
